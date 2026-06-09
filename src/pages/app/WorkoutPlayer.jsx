@@ -147,20 +147,20 @@ export default function WorkoutPlayer() {
 
       {/* Header */}
       <div style={{
-        background: '#1B6B7B', padding: '16px 20px',
+        background: '#FFFFFF', padding: '16px 20px', borderBottom: '1px solid #E8E8E4',
         position: 'sticky', top: 56, zIndex: 40,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={() => navigate(-1)} style={{
             background: 'transparent', border: 'none', cursor: 'pointer',
-            color: '#FFFFFF', fontSize: 20, lineHeight: 1,
+            color: '#0D0D0D', fontSize: 24, lineHeight: 1,
           }}>←</button>
           <div style={{ flex: 1 }}>
             <h1 style={{
-              fontFamily: 'Bebas Neue', fontSize: 20, letterSpacing: '0.04em',
-              color: 'var(--white)', lineHeight: 1,
+              fontFamily: 'Bebas Neue', fontSize: 26, letterSpacing: '0.04em',
+              color: '#0D0D0D', lineHeight: 1,
             }}>{workout?.title}</h1>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)', marginTop: 2 }}>
+            <p style={{ fontSize: 14, color: '#888882', marginTop: 2 }}>
               {exercises.length} exercises
             </p>
           </div>
@@ -227,14 +227,14 @@ export default function WorkoutPlayer() {
               >
                 <div style={{
                   width: 36, height: 36, borderRadius: '50%',
-                  background: '#C4857A', display: 'flex',
+                  background: '#F5F5F2', border: '2px solid #0D0D0D', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
                   fontFamily: 'Bebas Neue', fontSize: 16, color: '#D4A853',
                   flexShrink: 0,
                 }}>{idx + 1}</div>
                 <div style={{ flex: 1, textAlign: 'left' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dark)' }}>
+                    <span style={{ fontSize: 17, fontWeight: 600, color: '#0D0D0D' }}>
                       {ex.exercises?.name}
                     </span>
                     {ex.section && (
@@ -245,7 +245,7 @@ export default function WorkoutPlayer() {
                       }}>{ex.section}</span>
                     )}
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
+                  <div style={{ fontSize: 14, color: '#888882', marginTop: 4 }}>
                     {ex.sets} sets · {ex.reps} reps
                     {ex.rest_seconds && ` · ${ex.rest_seconds}s rest`}
                   </div>

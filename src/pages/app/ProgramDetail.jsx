@@ -81,19 +81,6 @@ export default function ProgramDetail() {
         background: '#FFFFFF', padding: '32px 20px 28px', borderBottom: '1px solid #E8E8E4',
         position: 'relative', overflow: 'hidden',
       }}>
-        {program.cover_image_url && (
-          <div style={{
-            position: 'absolute', inset: 0,
-            backgroundImage: 'url(' + program.cover_image_url + ')',
-            backgroundSize: 'cover', backgroundPosition: 'center top',
-            opacity: 1,
-          }}>
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: 'linear-gradient(to bottom, ' + program.color + 'DD 0%, ' + program.color + 'BB 100%)',
-            }} />
-          </div>
-        )}
         <div style={{ position: 'relative', zIndex: 1, borderLeft: '4px solid ' + program.color, paddingLeft: 16 }}>
         <button onClick={() => navigate('/app')} style={{
           background: '#F5F5F2', border: 'none', borderRadius: 100,

@@ -29,14 +29,14 @@ export default function AppShell() {
 
       {/* Top nav */}
       <nav style={{
-        background: '#C4857A', padding: '0 20px',
+        background: 'var(--dark)', padding: '0 20px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         height: 56, flexShrink: 0, position: 'sticky', top: 0, zIndex: 50,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <BoltIcon size={20} color="#D4A853" />
-          <span style={{ fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em', color: 'var(--white)' }}>
-            <span style={{ color: '#FFFFFF' }}>ZOE</span><span style={{ color: '#F5E6D0' }}>STRENGTH</span>
+          <span style={{ fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em', color: '#0D0D0D' }}>
+            ZOE<span style={{ color: '#C4857A' }}>STRENGTH</span>
           </span>
         </div>
 
@@ -47,9 +47,9 @@ export default function AppShell() {
         }}>
           <div style={{
             width: 28, height: 28, borderRadius: '50%',
-            background: 'var(--teal)', display: 'flex', alignItems: 'center',
+            background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center',
             justifyContent: 'center', fontFamily: 'Bebas Neue', fontSize: 13,
-            color: '#FFFFFF', letterSpacing: '0.05em',
+            color: '#D4A853', letterSpacing: '0.05em',
           }}>
             {user?.email?.[0]?.toUpperCase()}
           </div>
@@ -59,12 +59,12 @@ export default function AppShell() {
         {menuOpen && (
           <div style={{
             position: 'absolute', top: 60, right: 16,
-            background: '#1A1A1A', border: '1px solid #2A2A2A',
+            background: '#FFFFFF', border: '1px solid #E0E0DC',
             borderRadius: 12, padding: 8, minWidth: 180, zIndex: 100,
           }}>
             <div style={{ padding: '8px 12px', borderBottom: '1px solid #2A2A2A', marginBottom: 4 }}>
-              <p style={{ fontSize: 11, color: '#555550' }}>Signed in as</p>
-              <p style={{ fontSize: 13, color: 'var(--white)', marginTop: 2 }}>{user?.email}</p>
+              <p style={{ fontSize: 11, color: '#888882' }}>Signed in as</p>
+              <p style={{ fontSize: 13, color: '#0D0D0D', marginTop: 2 }}>{user?.email}</p>
             </div>
             <button onClick={signOut} style={{
               width: '100%', padding: '10px 12px', background: 'transparent',
@@ -93,7 +93,7 @@ export default function AppShell() {
 
       {/* Bottom tab bar */}
       <div style={{
-        background: '#C4857A',
+        background: 'var(--dark)',
         display: 'flex', borderTop: '1px solid #1A1A1A',
         position: 'sticky', bottom: 0, flexShrink: 0,
       }}>
@@ -107,10 +107,10 @@ export default function AppShell() {
             <span style={{
               fontSize: 10, fontFamily: 'DM Sans', fontWeight: 600,
               letterSpacing: '0.08em', textTransform: 'uppercase',
-              color: isActive(tab.path) ? '#FFFFFF' : 'rgba(255,255,255,0.6)',
+              color: isActive(tab.path) ? '#D4A853' : '#444440',
             }}>{tab.label}</span>
             {isActive(tab.path) && (
-              <div style={{ width: 16, height: 2, background: '#FFFFFF', borderRadius: 2 }} />
+              <div style={{ width: 16, height: 2, background: '#D4A853', borderRadius: 2 }} />
             )}
           </button>
         ))}

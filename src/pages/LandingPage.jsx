@@ -9,12 +9,12 @@ const programs = [
   {
     id: 'strng', name: 'STRNG', tag: '8 weeks',
     description: 'Heavy compound lifting built for women who want to get seriously strong. 4 days/week, progressive overload, SIT finishers.',
-    color: '#D4A853', textColor: '#0D0D0D', weeks: 8, days: 4,
+    color: '#C8F500', textColor: '#0D0D0D', weeks: 8, days: 4,
   },
   {
     id: 'cycle-synched', name: 'Cycle Synched Reset', tag: '4 weeks',
     description: 'Training and recovery mapped to your cycle phases. Work with your hormones, not against them.',
-    color: '#C4857A', textColor: '#FFFFFF', weeks: 4, days: 3,
+    color: '#FF3CAC', textColor: '#FFFFFF', weeks: 4, days: 3,
   },
   {
     id: '10k', name: 'Athens 10K Plan', tag: '10 weeks',
@@ -68,7 +68,7 @@ export default function LandingPage() {
       }}>
         <Wordmark dark />
         <a href={getStripeLink()} style={{
-          background: '#0D0D0D', color: '#D4A853',
+          background: '#0D0D0D', color: '#C8F500',
           padding: '10px 22px', borderRadius: 100,
           fontFamily: 'Bebas Neue', fontSize: 15, letterSpacing: '0.08em',
           textDecoration: 'none',
@@ -88,12 +88,12 @@ export default function LandingPage() {
         <div>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: '#0D0D0D', color: '#D4A853',
+            background: '#0D0D0D', color: '#C8F500',
             padding: '6px 14px', borderRadius: 100,
             fontSize: 11, fontWeight: 700, letterSpacing: '0.12em',
             textTransform: 'uppercase', marginBottom: 32,
           }}>
-            <span style={{ width: 6, height: 6, background: '#D4A853', borderRadius: '50%' }} />
+            <span style={{ width: 6, height: 6, background: '#C8F500', borderRadius: '50%' }} />
             Fully alive in your body
           </div>
 
@@ -104,7 +104,7 @@ export default function LandingPage() {
           }}>
             RUN FAST.<br />
             LIFT<br />
-            <span style={{ color: '#C4857A' }}>HEAVY.</span><br />
+            <span style={{ color: '#FF3CAC' }}>HEAVY.</span><br />
             FEEL<br />
             <span style={{ WebkitTextStroke: '3px #0D0D0D', color: 'transparent' }}>ALIVE.</span>
           </h1>
@@ -127,24 +127,24 @@ export default function LandingPage() {
           <div style={{ position: 'relative', width: 380, height: 500 }}>
             <div style={{
               position: 'absolute', inset: 0,
-              background: 'linear-gradient(135deg, #D4A853 0%, #C4857A 100%)',
+              background: 'linear-gradient(135deg, #C8F500 0%, #FF3CAC 100%)',
               borderRadius: '60% 40% 55% 45% / 50% 60% 40% 50%',
               opacity: 0.12,
             }} />
             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -52%)' }}>
-              <BoltIcon size={260} color="#D4A853" />
+              <BoltIcon size={260} color="#C8F500" />
             </div>
             <div style={{ position: 'absolute', bottom: 60, left: 0, right: 0, textAlign: 'center' }}>
               <div style={{ fontFamily: 'Bebas Neue', fontSize: 42, letterSpacing: '0.06em', color: '#0D0D0D', lineHeight: 1 }}>
-                ZOE<span style={{ color: '#C4857A' }}>STRENGTH</span>
+                ZOE<span style={{ color: '#FF3CAC' }}>STRENGTH</span>
               </div>
               <div style={{ fontSize: 12, color: '#888882', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 6 }}>
                 Fully alive in your body
               </div>
             </div>
             <FloatingTag text="Run Fast" top="8%" left="0%" bg="#1B6B7B" color="#fff" />
-            <FloatingTag text="Lift Heavy" top="20%" right="0%" bg="#C4857A" color="#fff" />
-            <FloatingTag text="Peri Strong" top="36%" left="-5%" bg="#0D0D0D" color="#D4A853" />
+            <FloatingTag text="Lift Heavy" top="20%" right="0%" bg="#FF3CAC" color="#fff" />
+            <FloatingTag text="Peri Strong" top="36%" left="-5%" bg="#0D0D0D" color="#C8F500" />
           </div>
         </div>
       </section>
@@ -153,7 +153,7 @@ export default function LandingPage() {
       <div style={{ background: '#0D0D0D', padding: '16px 0', overflow: 'hidden', whiteSpace: 'nowrap' }}>
         <div style={{ display: 'inline-block', animation: 'marquee 24s linear infinite' }}>
           {Array(4).fill('ZOESTRENGTH · RUN FAST · LIFT HEAVY · FULLY ALIVE · PERIMENOPAUSE STRONG · ').map((t, i) => (
-            <span key={i} style={{ fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.12em', color: '#D4A853' }}>{t}</span>
+            <span key={i} style={{ fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.12em', color: '#C8F500' }}>{t}</span>
           ))}
         </div>
         <style>{`@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-25%)} }`}</style>
@@ -165,14 +165,14 @@ export default function LandingPage() {
           <div style={{ flex: '0 0 auto' }}>
             <div style={{
               width: 180, height: 180, borderRadius: '50%',
-              border: '4px solid #D4A853',
+              border: '4px solid #C8F500',
               background: '#1B6B7B',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontFamily: 'Bebas Neue', fontSize: 56, color: '#D4A853',
+              fontFamily: 'Bebas Neue', fontSize: 56, color: '#C8F500',
             }}>SK</div>
           </div>
           <div style={{ flex: 1, minWidth: 280 }}>
-            <p style={{ color: '#C4857A', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 12 }}>Your coach</p>
+            <p style={{ color: '#FF3CAC', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 12 }}>Your coach</p>
             <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 48, color: '#0D0D0D', marginBottom: 6, letterSpacing: '0.02em' }}>SABRINA KYRIACOU</h2>
             <p style={{ fontSize: 12, color: '#888882', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 20 }}>B.Sc Exercise Science · 9× HM · 1× Marathon · 12× 10K · 7× 5K</p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: '#555550', maxWidth: 580 }}>
@@ -188,7 +188,7 @@ export default function LandingPage() {
       {/* PROGRAMS */}
       <section style={{ padding: '100px 48px', maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ marginBottom: 60 }}>
-          <p style={{ color: '#C4857A', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 12 }}>What's included</p>
+          <p style={{ color: '#FF3CAC', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 12 }}>What's included</p>
           <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 'clamp(48px, 7vw, 80px)', lineHeight: 0.92, color: '#0D0D0D' }}>
             ALL PROGRAMS.<br />ONE SUBSCRIPTION.
           </h2>
@@ -222,7 +222,7 @@ export default function LandingPage() {
       <section style={{ background: '#0D0D0D', padding: '100px 48px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ marginBottom: 60 }}>
-            <p style={{ color: '#D4A853', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 12 }}>How it works</p>
+            <p style={{ color: '#C8F500', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 12 }}>How it works</p>
             <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 'clamp(48px, 7vw, 80px)', lineHeight: 0.92, color: '#FFFFFF' }}>
               BUILT FOR<br />REAL TRAINING
             </h2>
@@ -242,9 +242,9 @@ export default function LandingPage() {
       {/* FINAL CTA */}
       <section style={{ padding: '120px 48px', textAlign: 'center', background: '#F5F5F2' }}>
         <div style={{ maxWidth: 560, margin: '0 auto' }}>
-          <BoltIcon size={56} color="#D4A853" style={{ margin: '0 auto 24px' }} />
+          <BoltIcon size={56} color="#C8F500" style={{ margin: '0 auto 24px' }} />
           <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 'clamp(60px, 10vw, 100px)', lineHeight: 0.88, color: '#0D0D0D', marginBottom: 16 }}>
-            READY TO FEEL<br /><span style={{ color: '#C4857A' }}>FULLY ALIVE?</span>
+            READY TO FEEL<br /><span style={{ color: '#FF3CAC' }}>FULLY ALIVE?</span>
           </h2>
           <p style={{ fontSize: 16, color: '#888882', marginBottom: 48, lineHeight: 1.6 }}>
             Join ZOESTRENGTH and get access to every program, every video, every PDF.
@@ -284,12 +284,12 @@ function PricingBlock({ billingCycle, setBillingCycle, discountCode, setDiscount
             padding: '10px 24px', borderRadius: 100, border: 'none', cursor: 'pointer',
             fontFamily: 'DM Sans', fontWeight: 600, fontSize: 13,
             background: billingCycle === cycle ? '#0D0D0D' : 'transparent',
-            color: billingCycle === cycle ? '#D4A853' : '#888882',
+            color: billingCycle === cycle ? '#C8F500' : '#888882',
             transition: 'all 0.2s', textTransform: 'capitalize',
           }}>
             {cycle}
             {cycle === 'annual' && (
-              <span style={{ marginLeft: 6, fontSize: 10, background: '#D4A853', color: '#0D0D0D', padding: '2px 6px', borderRadius: 4, fontWeight: 800 }}>SAVE 45%</span>
+              <span style={{ marginLeft: 6, fontSize: 10, background: '#C8F500', color: '#0D0D0D', padding: '2px 6px', borderRadius: 4, fontWeight: 800 }}>SAVE 45%</span>
             )}
           </button>
         ))}
@@ -324,7 +324,7 @@ function PricingBlock({ billingCycle, setBillingCycle, discountCode, setDiscount
       {/* CTA */}
       <a href={stripeLink} style={{
         display: 'block', textAlign: 'center',
-        background: '#D4A853', color: '#0D0D0D',
+        background: '#C8F500', color: '#0D0D0D',
         padding: '18px 40px', borderRadius: 100,
         fontFamily: 'Bebas Neue', fontSize: 20, letterSpacing: '0.08em',
         textDecoration: 'none',
@@ -342,9 +342,9 @@ function PricingBlock({ billingCycle, setBillingCycle, discountCode, setDiscount
 function Wordmark({ dark }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <BoltIcon size={22} color="#D4A853" />
+      <BoltIcon size={22} color="#C8F500" />
       <span style={{ fontFamily: 'Bebas Neue', fontSize: 20, letterSpacing: '0.08em', color: dark ? '#0D0D0D' : '#FFFFFF' }}>
-        ZOE<span style={{ color: '#C4857A' }}>STRENGTH</span>
+        ZOE<span style={{ color: '#FF3CAC' }}>STRENGTH</span>
       </span>
     </div>
   )

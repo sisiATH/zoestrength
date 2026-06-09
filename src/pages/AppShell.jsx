@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { supabase } from '../lib/supabase'
 import ProgramsView from './app/ProgramsView'
 import ProgramDetail from './app/ProgramDetail'
 import WorkoutPlayer from './app/WorkoutPlayer'
 import ExtrasView from './app/ExtrasView'
 import AdminDashboard from './app/AdminDashboard'
+
+const ROSE = '#C4857A'
+const GOLD = '#D4A853'
+const WHITE = '#FFFFFF'
 
 export default function AppShell() {
   const { user, signOut } = useAuth()
@@ -25,55 +28,46 @@ export default function AppShell() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--light)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: '#F5F5F2', display: 'flex', flexDirection: 'column' }}>
 
       {/* Top nav */}
       <nav style={{
-        background: 'var(--dark)', padding: '0 20px',
+        background: ROSE, padding: '0 20px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        height: 56, flexShrink: 0, position: 'sticky', top: 0, zIndex: 50,
+        height: 60, flexShrink: 0, position: 'sticky', top: 0, zIndex: 50,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <BoltIcon size={20} color="#D4A853" />
-          <span style={{ fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em', color: '#0D0D0D' }}>
-            ZOE<span style={{ color: '#C4857A' }}>STRENGTH</span>
+          <BoltIcon size={20} color={WHITE} />
+          <span style={{ fontFamily: 'Bebas Neue', fontSize: 20, letterSpacing: '0.08em', color: WHITE }}>
+            ZOESTRENGTH
           </span>
         </div>
 
         <button onClick={() => setMenuOpen(!menuOpen)} style={{
-          background: 'transparent', border: 'none', cursor: 'pointer',
-          color: '#888882', fontSize: 13, fontFamily: 'DM Sans',
-          display: 'flex', alignItems: 'center', gap: 6,
+          background: 'rgba(255,255,255,0.2)', border: 'none', cursor: 'pointer',
+          width: 32, height: 32, borderRadius: '50%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: 'Bebas Neue', fontSize: 15, color: WHITE, letterSpacing: '0.05em',
         }}>
-          <div style={{
-            width: 28, height: 28, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', fontFamily: 'Bebas Neue', fontSize: 13,
-            color: '#D4A853', letterSpacing: '0.05em',
-          }}>
-            {user?.email?.[0]?.toUpperCase()}
-          </div>
+          {user?.email?.[0]?.toUpperCase()}
         </button>
 
-        {/* Dropdown */}
         {menuOpen && (
           <div style={{
-            position: 'absolute', top: 60, right: 16,
-            background: '#FFFFFF', border: '1px solid #E0E0DC',
-            borderRadius: 12, padding: 8, minWidth: 180, zIndex: 100,
+            position: 'absolute', top: 68, right: 16,
+            background: WHITE, border: '1px solid #E0E0DC',
+            borderRadius: 12, padding: 8, minWidth: 200, zIndex: 100,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
           }}>
-            <div style={{ padding: '8px 12px', borderBottom: '1px solid #2A2A2A', marginBottom: 4 }}>
+            <div style={{ padding: '8px 12px', borderBottom: '1px solid #F0F0EC', marginBottom: 4 }}>
               <p style={{ fontSize: 11, color: '#888882' }}>Signed in as</p>
               <p style={{ fontSize: 13, color: '#0D0D0D', marginTop: 2 }}>{user?.email}</p>
             </div>
             <button onClick={signOut} style={{
               width: '100%', padding: '10px 12px', background: 'transparent',
-              border: 'none', color: '#888882', fontSize: 13, cursor: 'pointer',
+              border: 'none', color: '#555550', fontSize: 14, cursor: 'pointer',
               textAlign: 'left', borderRadius: 8, fontFamily: 'DM Sans',
-            }}
-              onMouseOver={e => e.target.style.background = '#222'}
-              onMouseOut={e => e.target.style.background = 'transparent'}
-            >
+            }}>
               Sign out
             </button>
           </div>
@@ -93,24 +87,25 @@ export default function AppShell() {
 
       {/* Bottom tab bar */}
       <div style={{
-        background: 'var(--dark)',
-        display: 'flex', borderTop: '1px solid #1A1A1A',
+        background: ROSE,
+        display: 'flex',
+        borderTop: '1px solid rgba(255,255,255,0.2)',
         position: 'sticky', bottom: 0, flexShrink: 0,
       }}>
         {tabs.map(tab => (
           <button key={tab.path} onClick={() => navigate(tab.path)} style={{
-            flex: 1, padding: '12px 8px',
+            flex: 1, padding: '14px 8px',
             background: 'transparent', border: 'none', cursor: 'pointer',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
           }}>
-            <span style={{ fontSize: 18 }}>{tab.icon}</span>
+            <span style={{ fontSize: 22 }}>{tab.icon}</span>
             <span style={{
-              fontSize: 10, fontFamily: 'DM Sans', fontWeight: 600,
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-              color: isActive(tab.path) ? '#D4A853' : '#444440',
+              fontSize: 13, fontFamily: 'DM Sans', fontWeight: 700,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              color: isActive(tab.path) ? WHITE : 'rgba(255,255,255,0.6)',
             }}>{tab.label}</span>
             {isActive(tab.path) && (
-              <div style={{ width: 16, height: 2, background: '#D4A853', borderRadius: 2 }} />
+              <div style={{ width: 20, height: 2, background: WHITE, borderRadius: 2 }} />
             )}
           </button>
         ))}

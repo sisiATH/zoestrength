@@ -36,7 +36,7 @@ export default function AppShell() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <BoltIcon size={20} color="#D4A853" />
           <span style={{ fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em', color: 'var(--white)' }}>
-            ZOE<span style={{ color: '#C4857A' }}>STRENGTH</span>
+            <span style={{ color: '#FFFFFF' }}>ZOE</span><span style={{ color: '#F5E6D0' }}>STRENGTH</span>
           </span>
         </div>
 
@@ -107,7 +107,7 @@ export default function AppShell() {
             <span style={{
               fontSize: 10, fontFamily: 'DM Sans', fontWeight: 600,
               letterSpacing: '0.08em', textTransform: 'uppercase',
-              color: isActive(tab.path) ? '#D4A853' : '#444440',
+              color: isActive(tab.path) ? '#FFFFFF' : 'rgba(255,255,255,0.6)',
             }}>{tab.label}</span>
             {isActive(tab.path) && (
               <div style={{ width: 16, height: 2, background: '#FFFFFF', borderRadius: 2 }} />

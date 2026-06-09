@@ -95,21 +95,21 @@ export default function LandingPage() {
       </div>
 
       {/* ZOE MEANING */}
-      <section style={{ background: DARK, padding: '100px 48px' }}>
+      <section style={{ background: WHITE, padding: '60px 48px' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ fontFamily: 'Bebas Neue', fontSize: 80, color: GOLD, letterSpacing: '0.1em', marginBottom: 8 }}>ΖΩΗ</div>
+          <div style={{ fontFamily: 'Bebas Neue', fontSize: 48, color: TEAL, letterSpacing: '0.1em', marginBottom: 8 }}>ΖΩΗ</div>
           <div style={{ fontSize: 13, color: MUTED, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 48 }}>pronounced ZO-ee · Greek for life</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, textAlign: 'left' }}>
             <div style={{ borderLeft: '2px solid ' + TEAL, paddingLeft: 24 }}>
               <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: TEAL, marginBottom: 10 }}>Early Christian tradition</p>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: '#B0B0AA' }}>ZΩΗ was a personification of eternal life. Life that doesn't diminish. Life that continues and deepens.</p>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: '#555550' }}>ZΩΗ was a personification of eternal life. Life that doesn't diminish. Life that continues and deepens.</p>
             </div>
             <div style={{ borderLeft: '2px solid ' + ROSE, paddingLeft: 24 }}>
               <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: ROSE, marginBottom: 10 }}>Gnostic tradition</p>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: '#B0B0AA' }}>ZΩΗ is a powerful female figure, daughter of Sophia (wisdom), who corrects what was done wrong. She sees the error, the dismissal, the assumption — and she fixes it. Sound familiar, ladies?</p>
+              <p style={{ fontSize: 15, lineHeight: 1.8, color: '#555550' }}>ZΩΗ is a powerful female figure, daughter of Sophia (wisdom), who corrects what was done wrong. She sees the error, the dismissal, the assumption — and she fixes it. Sound familiar, ladies?</p>
             </div>
           </div>
-          <div style={{ marginTop: 48, padding: '32px 40px', border: '1px solid #2A2A2A', borderRadius: 16 }}>
+          <div style={{ marginTop: 48, padding: '32px 40px', border: '1px solid #E0E0DC', borderRadius: 16 }}>
             <p style={{ fontSize: 17, lineHeight: 1.9, color: '#C0C0BA', fontStyle: 'italic' }}>
               "This is about being fully alive in your body. Earned. Unselfconscious. Can't be faked. Fully inhabiting the body you have, at the stage you're at, with everything you now know. The training, the science, the nutrition — all of it is in service of that feeling. That's what we're building here."
             </p>
@@ -190,7 +190,7 @@ export default function LandingPage() {
               <div key={i} style={{ padding: '36px 32px', paddingTop: '36px' }}>
                 <div style={{ fontSize: 32, marginBottom: 16 }}>{f.icon}</div>
                 <h3 style={{ fontFamily: 'Bebas Neue', fontSize: 24, color: WHITE, marginBottom: 10 }}>{f.title}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.65, color: 'rgba(255,255,255,0.65)' }}>{f.desc}</p>
+                <p style={{ fontSize: 14, lineHeight: 1.65, color: '#777770' }}>{f.desc}</p>
               </div>
             ))}
           </div>

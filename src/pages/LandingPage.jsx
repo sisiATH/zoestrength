@@ -187,7 +187,7 @@ export default function LandingPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
             {features.map((f, i) => (
-              <div key={i} style={{ padding: '36px 32px', borderTop: '1px solid rgba(255,255,255,0.15)', borderLeft: i % 3 !== 0 ? '1px solid rgba(255,255,255,0.15)' : 'none' }}>
+              <div key={i} style={{ padding: '36px 32px', paddingTop: '36px' }}>
                 <div style={{ fontSize: 32, marginBottom: 16 }}>{f.icon}</div>
                 <h3 style={{ fontFamily: 'Bebas Neue', fontSize: 24, color: WHITE, marginBottom: 10 }}>{f.title}</h3>
                 <p style={{ fontSize: 14, lineHeight: 1.65, color: 'rgba(255,255,255,0.65)' }}>{f.desc}</p>

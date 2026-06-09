@@ -190,7 +190,7 @@ export default function LandingPage() {
               <div key={i} style={{ padding: '36px 32px', paddingTop: '36px' }}>
                 <div style={{ fontSize: 32, marginBottom: 16 }}>{f.icon}</div>
                 <h3 style={{ fontFamily: 'Bebas Neue', fontSize: 24, color: WHITE, marginBottom: 10 }}>{f.title}</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.65, color: '#777770' }}>{f.desc}</p>
+                <p style={{ fontSize: 14, lineHeight: 1.65, color: 'rgba(255,255,255,0.9)' }}>{f.desc}</p>
               </div>
             ))}
           </div>

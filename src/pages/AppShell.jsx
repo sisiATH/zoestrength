@@ -29,7 +29,7 @@ export default function AppShell() {
 
       {/* Top nav */}
       <nav style={{
-        background: 'var(--dark)', padding: '0 20px',
+        background: '#1B6B7B', padding: '0 20px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         height: 56, flexShrink: 0, position: 'sticky', top: 0, zIndex: 50,
       }}>
@@ -93,7 +93,7 @@ export default function AppShell() {
 
       {/* Bottom tab bar */}
       <div style={{
-        background: 'var(--dark)',
+        background: '#1B6B7B',
         display: 'flex', borderTop: '1px solid #1A1A1A',
         position: 'sticky', bottom: 0, flexShrink: 0,
       }}>

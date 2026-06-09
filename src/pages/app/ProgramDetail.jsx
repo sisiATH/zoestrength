@@ -78,7 +78,7 @@ export default function ProgramDetail() {
     <div style={{ maxWidth: 600, margin: '0 auto' }}>
       {/* Header */}
       <div style={{
-        background: program.color, padding: '32px 20px 28px',
+        background: '#FFFFFF', padding: '32px 20px 28px', borderBottom: '1px solid #E8E8E4',
         position: 'relative', overflow: 'hidden',
       }}>
         {program.cover_image_url && (
@@ -94,11 +94,11 @@ export default function ProgramDetail() {
             }} />
           </div>
         )}
-        <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ position: 'relative', zIndex: 1, borderLeft: '4px solid ' + program.color, paddingLeft: 16 }}>
         <button onClick={() => navigate('/app')} style={{
-          background: 'rgba(0,0,0,0.12)', border: 'none', borderRadius: 100,
+          background: '#F5F5F2', border: 'none', borderRadius: 100,
           padding: '6px 14px', cursor: 'pointer',
-          color: program.text_color, fontSize: 12, fontWeight: 600,
+          color: '#0D0D0D', fontSize: 14, fontWeight: 600,
           marginBottom: 20, display: 'flex', alignItems: 'center', gap: 6,
         }}>
           ← Back
@@ -110,17 +110,17 @@ export default function ProgramDetail() {
         </div>
         <span style={{
           fontSize: 10, fontWeight: 700, letterSpacing: '0.14em',
-          textTransform: 'uppercase', color: program.text_color, opacity: 0.6,
+          textTransform: 'uppercase', color: '#888882', opacity: 1,
           display: 'block', marginBottom: 6,
         }}>
           {program.duration_weeks} weeks · {program.days_per_week} days/week
         </span>
         <h1 style={{
-          fontFamily: 'Bebas Neue', fontSize: 42, letterSpacing: '0.03em',
-          color: program.text_color, lineHeight: 1, marginBottom: 8,
+          fontFamily: 'Bebas Neue', fontSize: 48, letterSpacing: '0.03em',
+          color: '#0D0D0D', lineHeight: 1, marginBottom: 8,
         }}>{program.name}</h1>
         {program.tagline && (
-          <p style={{ fontSize: 14, color: program.text_color, opacity: 0.75 }}>{program.tagline}</p>
+          <p style={{ fontSize: 15, color: '#555550', opacity: 1 }}>{program.tagline}</p>
         )}
         </div>
       </div>

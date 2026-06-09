@@ -29,7 +29,7 @@ export default function AppShell() {
 
       {/* Top nav */}
       <nav style={{
-        background: '#1B6B7B', padding: '0 20px',
+        background: '#C4857A', padding: '0 20px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         height: 56, flexShrink: 0, position: 'sticky', top: 0, zIndex: 50,
       }}>
@@ -49,7 +49,7 @@ export default function AppShell() {
             width: 28, height: 28, borderRadius: '50%',
             background: 'var(--teal)', display: 'flex', alignItems: 'center',
             justifyContent: 'center', fontFamily: 'Bebas Neue', fontSize: 13,
-            color: '#D4A853', letterSpacing: '0.05em',
+            color: '#FFFFFF', letterSpacing: '0.05em',
           }}>
             {user?.email?.[0]?.toUpperCase()}
           </div>
@@ -93,7 +93,7 @@ export default function AppShell() {
 
       {/* Bottom tab bar */}
       <div style={{
-        background: '#1B6B7B',
+        background: '#C4857A',
         display: 'flex', borderTop: '1px solid #1A1A1A',
         position: 'sticky', bottom: 0, flexShrink: 0,
       }}>
@@ -110,7 +110,7 @@ export default function AppShell() {
               color: isActive(tab.path) ? '#D4A853' : '#444440',
             }}>{tab.label}</span>
             {isActive(tab.path) && (
-              <div style={{ width: 16, height: 2, background: '#D4A853', borderRadius: 2 }} />
+              <div style={{ width: 16, height: 2, background: '#FFFFFF', borderRadius: 2 }} />
             )}
           </button>
         ))}

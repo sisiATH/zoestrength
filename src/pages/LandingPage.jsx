@@ -143,7 +143,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div style={{ marginTop: 48, padding: '32px 40px', border: '1px solid #E0E0DC', borderRadius: 16 }}>
-            <p style={{ fontSize: 17, lineHeight: 1.9, color: '#C0C0BA', fontStyle: 'italic' }}>
+            <p style={{ fontSize: 17, lineHeight: 1.9, color: '#2A2A2A', fontStyle: 'italic' }}>
               "This is about being fully alive in your body. Earned. Unselfconscious. Can't be faked. Fully inhabiting the body you have, at the stage you're at, with everything you now know. The training, the science, the nutrition — all of it is in service of that feeling. That's what we're building here."
             </p>
           </div>

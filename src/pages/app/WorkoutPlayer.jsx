@@ -153,14 +153,14 @@ export default function WorkoutPlayer() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={() => navigate(-1)} style={{
             background: 'transparent', border: 'none', cursor: 'pointer',
-            color: '#888882', fontSize: 20, lineHeight: 1,
+            color: '#FFFFFF', fontSize: 20, lineHeight: 1,
           }}>←</button>
           <div style={{ flex: 1 }}>
             <h1 style={{
               fontFamily: 'Bebas Neue', fontSize: 20, letterSpacing: '0.04em',
               color: 'var(--white)', lineHeight: 1,
             }}>{workout?.title}</h1>
-            <p style={{ fontSize: 11, color: '#555550', marginTop: 2 }}>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.8)', marginTop: 2 }}>
               {exercises.length} exercises
             </p>
           </div>
@@ -227,7 +227,7 @@ export default function WorkoutPlayer() {
               >
                 <div style={{
                   width: 36, height: 36, borderRadius: '50%',
-                  background: 'var(--dark)', display: 'flex',
+                  background: '#C4857A', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
                   fontFamily: 'Bebas Neue', fontSize: 16, color: '#D4A853',
                   flexShrink: 0,

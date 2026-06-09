@@ -10,9 +10,7 @@ export default function ProgramsView() {
   const [completions, setCompletions] = useState({})
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchPrograms()
-  }, [])
+  useEffect(() => { fetchPrograms() }, [])
 
   async function fetchPrograms() {
     const { data: progs } = await supabase
@@ -23,7 +21,6 @@ export default function ProgramsView() {
 
     if (progs) setPrograms(progs)
 
-    // Get completion counts per program
     const { data: comp } = await supabase
       .from('workout_completions')
       .select('workout_id, workouts(program_id)')
@@ -44,9 +41,9 @@ export default function ProgramsView() {
   if (loading) return <LoadingSkeleton />
 
   return (
-    <div style={{ padding: '24px 20px', maxWidth: 600, margin: '0 auto' }}>
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontFamily: 'Bebas Neue', fontSize: 36, color: 'var(--dark)', letterSpacing: '0.03em' }}>
+    <div style={{ padding: '24px 0 100px' }}>
+      <div style={{ padding: '0 20px', marginBottom: 20 }}>
+        <h1 style={{ fontFamily: 'Bebas Neue', fontSize: 32, color: 'var(--dark)', letterSpacing: '0.03em' }}>
           YOUR PROGRAMS
         </h1>
         <p style={{ color: 'var(--text-muted)', fontSize: 14, marginTop: 4 }}>
@@ -54,7 +51,15 @@ export default function ProgramsView() {
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+      {/* Horizontal scroll row */}
+      <div style={{
+        display: 'flex',
+        overflowX: 'auto',
+        gap: 16,
+        padding: '8px 20px 16px',
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+      }}>
         {programs.map(program => (
           <ProgramCard
             key={program.id}
@@ -64,73 +69,82 @@ export default function ProgramsView() {
           />
         ))}
       </div>
+
+      <style>{`.programs-scroll::-webkit-scrollbar { display: none; }`}</style>
     </div>
   )
 }
 
 function ProgramCard({ program, completedCount, onClick }) {
+  const size = 160
+
   return (
     <div
       onClick={onClick}
       style={{
-        background: program.color,
-        borderRadius: 18, padding: '24px',
-        cursor: 'pointer', position: 'relative', overflow: 'hidden',
-        transition: 'transform 0.15s',
+        flexShrink: 0,
+        width: size,
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 10,
       }}
-      onMouseOver={e => e.currentTarget.style.transform = 'scale(1.01)'}
-      onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
     >
-      {/* Background bolt */}
-      <div style={{ position: 'absolute', right: -8, top: -8, opacity: 0.08 }}>
-        <svg width={100} height={130} viewBox="0 0 100 130" fill="none">
-          <polygon points="60,0 20,70 50,70 40,130 80,55 52,55" fill={program.text_color} />
-        </svg>
-      </div>
-
-      <div style={{ position: 'relative' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div>
-            <span style={{
-              fontSize: 10, fontWeight: 700, letterSpacing: '0.14em',
-              textTransform: 'uppercase', color: program.text_color, opacity: 0.6,
-              display: 'block', marginBottom: 6,
-            }}>
-              {program.duration_weeks ? `${program.duration_weeks} weeks` : 'Ongoing'}
-              {program.days_per_week ? ` · ${program.days_per_week} days/wk` : ''}
-            </span>
-            <h2 style={{
-              fontFamily: 'Bebas Neue', fontSize: 30, letterSpacing: '0.03em',
-              color: program.text_color, lineHeight: 1,
-            }}>{program.name}</h2>
+      {/* Square card with image or color */}
+      <div style={{
+        width: size,
+        height: size,
+        borderRadius: 20,
+        background: program.color,
+        backgroundImage: program.cover_image_url ? 'url(' + program.cover_image_url + ')' : undefined,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'transform 0.15s',
+        boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+      }}
+        onMouseOver={e => e.currentTarget.style.transform = 'scale(1.04)'}
+        onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+      >
+        {/* Bolt watermark if no image */}
+        {!program.cover_image_url && (
+          <div style={{ position: 'absolute', right: -10, bottom: -10, opacity: 0.15 }}>
+            <svg width={100} height={130} viewBox="0 0 100 130" fill="none">
+              <polygon points="60,0 20,70 50,70 40,130 80,55 52,55" fill={program.text_color} />
+            </svg>
           </div>
-          {completedCount > 0 && (
-            <div style={{
-              background: 'rgba(0,0,0,0.15)', borderRadius: 100,
-              padding: '4px 12px', display: 'flex', alignItems: 'center', gap: 5,
-            }}>
-              <span style={{ fontSize: 10, color: program.text_color, opacity: 0.8 }}>✓</span>
-              <span style={{ fontSize: 11, fontWeight: 700, color: program.text_color, opacity: 0.8 }}>
-                {completedCount} done
-              </span>
-            </div>
-          )}
-        </div>
-
-        {program.tagline && (
-          <p style={{
-            fontSize: 13, color: program.text_color, opacity: 0.75,
-            marginTop: 10, lineHeight: 1.5,
-          }}>{program.tagline}</p>
         )}
 
-        <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{
-            fontSize: 12, fontWeight: 600, color: program.text_color,
-            opacity: 0.9, letterSpacing: '0.04em',
-          }}>
-            VIEW PROGRAM →
-          </span>
+        {/* Completion badge */}
+        {completedCount > 0 && (
+          <div style={{
+            position: 'absolute', top: 8, right: 8,
+            background: 'var(--teal)', color: 'white',
+            borderRadius: 100, padding: '2px 8px',
+            fontSize: 10, fontWeight: 700,
+          }}>✓ {completedCount}</div>
+        )}
+
+        {/* Program name overlay at bottom */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%)',
+          padding: '20px 10px 10px',
+        }}>
+          <div style={{
+            fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.04em',
+            color: '#FFFFFF', lineHeight: 1,
+          }}>{program.name}</div>
+        </div>
+      </div>
+
+      {/* Info below card */}
+      <div style={{ textAlign: 'center', width: '100%' }}>
+        <div style={{ fontSize: 11, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
+          {program.duration_weeks ? `${program.duration_weeks}w` : ''}
+          {program.days_per_week ? ` · ${program.days_per_week}d/wk` : ''}
         </div>
       </div>
     </div>
@@ -140,12 +154,15 @@ function ProgramCard({ program, completedCount, onClick }) {
 function LoadingSkeleton() {
   return (
     <div style={{ padding: '24px 20px' }}>
-      {[1, 2, 3].map(i => (
-        <div key={i} style={{
-          height: 120, background: '#E8E8E4', borderRadius: 18,
-          marginBottom: 14, animation: 'shimmer 1.5s infinite',
-        }} />
-      ))}
+      <div style={{ display: 'flex', gap: 16, overflowX: 'auto' }}>
+        {[1, 2, 3].map(i => (
+          <div key={i} style={{
+            flexShrink: 0, width: 160, height: 160,
+            background: '#E8E8E4', borderRadius: 20,
+            animation: 'shimmer 1.5s infinite',
+          }} />
+        ))}
+      </div>
       <style>{`@keyframes shimmer { 0%,100%{opacity:0.5} 50%{opacity:1} }`}</style>
     </div>
   )

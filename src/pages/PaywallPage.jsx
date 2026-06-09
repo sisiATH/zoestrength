@@ -14,13 +14,13 @@ export default function PaywallPage() {
     }}>
       <div style={{ width: '100%', maxWidth: 480, textAlign: 'center' }}>
 
-        <BoltIcon size={44} color="var(--lime)" />
+        <BoltIcon size={44} color="#D4A853" />
 
         <h1 style={{
           fontFamily: 'Bebas Neue', fontSize: 52, letterSpacing: '0.03em',
           color: 'var(--white)', marginTop: 16, marginBottom: 8, lineHeight: 0.95,
         }}>
-          ZOE<span style={{ color: 'var(--pink)' }}>STRENGTH</span>
+          ZOE<span style={{ color: '#C4857A' }}>STRENGTH</span>
         </h1>
 
         <p style={{ color: '#777770', fontSize: 14, marginBottom: 48 }}>
@@ -48,13 +48,13 @@ export default function PaywallPage() {
                 flex: 1, padding: '10px 16px', borderRadius: 100,
                 border: 'none', cursor: 'pointer',
                 fontFamily: 'DM Sans', fontWeight: 600, fontSize: 13,
-                background: billing === cycle ? 'var(--lime)' : 'transparent',
+                background: billing === cycle ? '#D4A853' : 'transparent',
                 color: billing === cycle ? 'var(--dark)' : '#666660',
                 transition: 'all 0.2s', textTransform: 'capitalize',
               }}>
                 {cycle}
                 {cycle === 'annual' && billing !== 'annual' && (
-                  <span style={{ marginLeft: 6, fontSize: 10, color: 'var(--lime)' }}>SAVE 45%</span>
+                  <span style={{ marginLeft: 6, fontSize: 10, color: '#D4A853' }}>SAVE 45%</span>
                 )}
               </button>
             ))}
@@ -72,7 +72,7 @@ export default function PaywallPage() {
 
           <a href={STRIPE_LINKS[billing]} style={{
             display: 'block',
-            background: 'var(--lime)', color: 'var(--dark)',
+            background: '#D4A853', color: 'var(--dark)',
             padding: '16px', borderRadius: 100,
             fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em',
             textDecoration: 'none',
@@ -99,7 +99,7 @@ export default function PaywallPage() {
               display: 'flex', alignItems: 'flex-start', gap: 12,
               padding: '10px 0', borderBottom: '1px solid #1A1A1A',
             }}>
-              <span style={{ color: 'var(--lime)', fontSize: 14, marginTop: 1 }}>✓</span>
+              <span style={{ color: '#D4A853', fontSize: 14, marginTop: 1 }}>✓</span>
               <span style={{ color: '#888882', fontSize: 14, lineHeight: 1.5 }}>{item}</span>
             </div>
           ))}

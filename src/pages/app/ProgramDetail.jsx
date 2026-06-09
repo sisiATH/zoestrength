@@ -81,6 +81,20 @@ export default function ProgramDetail() {
         background: program.color, padding: '32px 20px 28px',
         position: 'relative', overflow: 'hidden',
       }}>
+        {program.cover_image_url && (
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: 'url(' + program.cover_image_url + ')',
+            backgroundSize: 'cover', backgroundPosition: 'center top',
+            opacity: 1,
+          }}>
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to bottom, ' + program.color + 'DD 0%, ' + program.color + 'BB 100%)',
+            }} />
+          </div>
+        )}
+        <div style={{ position: 'relative', zIndex: 1 }}>
         <button onClick={() => navigate('/app')} style={{
           background: 'rgba(0,0,0,0.12)', border: 'none', borderRadius: 100,
           padding: '6px 14px', cursor: 'pointer',
@@ -108,6 +122,7 @@ export default function ProgramDetail() {
         {program.tagline && (
           <p style={{ fontSize: 14, color: program.text_color, opacity: 0.75 }}>{program.tagline}</p>
         )}
+        </div>
       </div>
 
       {/* Weeks */}

@@ -34,12 +34,12 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
-          <BoltIcon size={40} color="var(--lime)" />
+          <BoltIcon size={40} color="#D4A853" />
           <div style={{
             fontFamily: 'Bebas Neue', fontSize: 28, letterSpacing: '0.08em',
             color: 'var(--white)', marginTop: 12,
           }}>
-            ZOE<span style={{ color: 'var(--pink)' }}>STRENGTH</span>
+            ZOE<span style={{ color: '#C4857A' }}>STRENGTH</span>
           </div>
         </div>
 
@@ -90,12 +90,12 @@ export default function LoginPage() {
                   outline: 'none', marginBottom: 12,
                   boxSizing: 'border-box',
                 }}
-                onFocus={e => e.target.style.borderColor = 'var(--lime)'}
+                onFocus={e => e.target.style.borderColor = '#D4A853'}
                 onBlur={e => e.target.style.borderColor = '#2A2A2A'}
               />
 
               {error && (
-                <p style={{ color: 'var(--pink)', fontSize: 13, marginBottom: 12 }}>{error}</p>
+                <p style={{ color: '#C4857A', fontSize: 13, marginBottom: 12 }}>{error}</p>
               )}
 
               <button
@@ -103,7 +103,7 @@ export default function LoginPage() {
                 disabled={loading || !email}
                 style={{
                   width: '100%', padding: '16px',
-                  background: loading ? '#2A2A2A' : 'var(--lime)',
+                  background: loading ? '#2A2A2A' : '#D4A853',
                   color: 'var(--dark)', border: 'none', borderRadius: 100,
                   fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em',
                   cursor: loading ? 'not-allowed' : 'pointer',
@@ -124,7 +124,7 @@ export default function LoginPage() {
               </p>
               <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
                 <a href={STRIPE_LINKS.annual} style={{
-                  background: 'var(--lime)', color: 'var(--dark)',
+                  background: '#D4A853', color: 'var(--dark)',
                   padding: '10px 20px', borderRadius: 100,
                   fontFamily: 'Bebas Neue', fontSize: 14, letterSpacing: '0.06em',
                   textDecoration: 'none',

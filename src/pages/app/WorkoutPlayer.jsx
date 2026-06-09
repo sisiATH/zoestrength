@@ -147,7 +147,7 @@ export default function WorkoutPlayer() {
 
       {/* Header */}
       <div style={{
-        background: 'var(--dark)', padding: '16px 20px',
+        background: '#1B6B7B', padding: '16px 20px',
         position: 'sticky', top: 56, zIndex: 40,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -189,7 +189,7 @@ export default function WorkoutPlayer() {
           <div style={{ flex: 1, margin: '0 16px' }}>
             <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: 4, height: 4 }}>
               <div style={{
-                background: 'var(--lime)', height: '100%', borderRadius: 4,
+                background: '#D4A853', height: '100%', borderRadius: 4,
                 width: `${(restTimer.seconds / restTimer.max) * 100}%`,
                 transition: 'width 1s linear',
               }} />
@@ -205,7 +205,7 @@ export default function WorkoutPlayer() {
       )}
 
       {/* Exercise list */}
-      <div style={{ padding: '16px' }}>
+      <div style={{ padding: '16px', paddingTop: 72 }}>
         {exercises.map((ex, idx) => {
           const isActive = activeExercise === ex.id
           const repsArr = ex.reps.split('-')
@@ -229,12 +229,21 @@ export default function WorkoutPlayer() {
                   width: 36, height: 36, borderRadius: '50%',
                   background: 'var(--dark)', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
-                  fontFamily: 'Bebas Neue', fontSize: 16, color: 'var(--lime)',
+                  fontFamily: 'Bebas Neue', fontSize: 16, color: '#D4A853',
                   flexShrink: 0,
                 }}>{idx + 1}</div>
                 <div style={{ flex: 1, textAlign: 'left' }}>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--dark)' }}>
-                    {ex.exercises?.name}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dark)' }}>
+                      {ex.exercises?.name}
+                    </span>
+                    {ex.section && (
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
+                        textTransform: 'uppercase', color: '#1B6B7B',
+                        background: '#E8F4F6', padding: '2px 8px', borderRadius: 4,
+                      }}>{ex.section}</span>
+                    )}
                   </div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
                     {ex.sets} sets · {ex.reps} reps
@@ -352,7 +361,7 @@ export default function WorkoutPlayer() {
             style={{
               width: '100%', padding: '16px',
               background: allSetsComplete ? 'var(--dark)' : 'var(--mid)',
-              color: allSetsComplete ? 'var(--lime)' : 'var(--text-muted)',
+              color: allSetsComplete ? '#D4A853' : 'var(--text-muted)',
               border: 'none', borderRadius: 100, cursor: allSetsComplete ? 'pointer' : 'not-allowed',
               fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em',
               transition: 'all 0.2s',

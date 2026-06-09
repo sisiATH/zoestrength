@@ -6,6 +6,7 @@ import ProgramsView from './app/ProgramsView'
 import ProgramDetail from './app/ProgramDetail'
 import WorkoutPlayer from './app/WorkoutPlayer'
 import ExtrasView from './app/ExtrasView'
+import AdminDashboard from './app/AdminDashboard'
 
 export default function AppShell() {
   const { user, signOut } = useAuth()
@@ -33,9 +34,9 @@ export default function AppShell() {
         height: 56, flexShrink: 0, position: 'sticky', top: 0, zIndex: 50,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <BoltIcon size={20} color="var(--lime)" />
+          <BoltIcon size={20} color="#D4A853" />
           <span style={{ fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em', color: 'var(--white)' }}>
-            ZOE<span style={{ color: 'var(--pink)' }}>STRENGTH</span>
+            ZOE<span style={{ color: '#C4857A' }}>STRENGTH</span>
           </span>
         </div>
 
@@ -48,7 +49,7 @@ export default function AppShell() {
             width: 28, height: 28, borderRadius: '50%',
             background: 'var(--teal)', display: 'flex', alignItems: 'center',
             justifyContent: 'center', fontFamily: 'Bebas Neue', fontSize: 13,
-            color: 'var(--lime)', letterSpacing: '0.05em',
+            color: '#D4A853', letterSpacing: '0.05em',
           }}>
             {user?.email?.[0]?.toUpperCase()}
           </div>
@@ -86,6 +87,7 @@ export default function AppShell() {
           <Route path="program/:programId" element={<ProgramDetail />} />
           <Route path="workout/:workoutId" element={<WorkoutPlayer />} />
           <Route path="extras" element={<ExtrasView />} />
+          <Route path="admin" element={<AdminDashboard />} />
         </Routes>
       </div>
 
@@ -105,10 +107,10 @@ export default function AppShell() {
             <span style={{
               fontSize: 10, fontFamily: 'DM Sans', fontWeight: 600,
               letterSpacing: '0.08em', textTransform: 'uppercase',
-              color: isActive(tab.path) ? 'var(--lime)' : '#444440',
+              color: isActive(tab.path) ? '#D4A853' : '#444440',
             }}>{tab.label}</span>
             {isActive(tab.path) && (
-              <div style={{ width: 16, height: 2, background: 'var(--lime)', borderRadius: 2 }} />
+              <div style={{ width: 16, height: 2, background: '#D4A853', borderRadius: 2 }} />
             )}
           </button>
         ))}

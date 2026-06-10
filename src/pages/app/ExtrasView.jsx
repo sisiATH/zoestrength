@@ -42,6 +42,27 @@ export default function ExtrasView() {
         </p>
       </div>
 
+      {/* Paid guide */}
+      <a href="https://buy.stripe.com/5kQdR9aNX6k93Vx8nmco003" target="_blank" rel="noopener noreferrer" style={{
+        display: 'block', background: '#0D0D0D', borderRadius: 16,
+        padding: 24, marginBottom: 20, textDecoration: 'none',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ width: 52, height: 52, borderRadius: 12, flexShrink: 0, background: '#C4857A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 }}>📘</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#FFFFFF', marginBottom: 4 }}>The Active Woman's Guide to Peri/Menopause</div>
+            <div style={{ fontSize: 13, color: '#888882' }}>Everything you need to know about training through hormonal transition</div>
+          </div>
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <div style={{ fontFamily: 'Bebas Neue', fontSize: 22, color: '#D4A853', letterSpacing: '0.04em' }}>$19.99</div>
+            <div style={{ fontSize: 11, color: '#555550', marginTop: 2 }}>one-time purchase</div>
+          </div>
+        </div>
+        <div style={{ marginTop: 16, background: '#D4A853', borderRadius: 100, padding: '10px 20px', textAlign: 'center', fontFamily: 'Bebas Neue', fontSize: 15, letterSpacing: '0.08em', color: '#0D0D0D' }}>
+          BUY NOW — $19.99
+        </div>
+      </a>
+
       {resources.length === 0 ? (
         <div style={{
           background: 'var(--white)', borderRadius: 14, padding: 32,

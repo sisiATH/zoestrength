@@ -178,31 +178,6 @@ export default function WorkoutPlayer() {
         <div style={{
           background: 'var(--teal)', padding: '14px 20px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          position: 'sticky', top: 112, zIndex: 39,
-        }}>
-          <div>
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Rest</div>
-            <div style={{ fontFamily: 'Bebas Neue', fontSize: 32, color: 'white', lineHeight: 1 }}>
-              {Math.floor(restTimer.seconds / 60)}:{String(restTimer.seconds % 60).padStart(2, '0')}
-            </div>
-          </div>
-          <div style={{ flex: 1, margin: '0 16px' }}>
-            <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: 4, height: 4 }}>
-              <div style={{
-                background: '#D4A853', height: '100%', borderRadius: 4,
-                width: `${(restTimer.seconds / restTimer.max) * 100}%`,
-                transition: 'width 1s linear',
-              }} />
-            </div>
-          </div>
-          <button onClick={() => { clearInterval(timerRef.current); setRestTimer(null) }} style={{
-            background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 8,
-            color: 'white', padding: '6px 12px', cursor: 'pointer', fontSize: 12,
-          }}>
-            Skip
-          </button>
-        </div>
-      )}
 
       {/* Exercise list */}
       <div style={{ padding: '16px', paddingTop: 72 }}>

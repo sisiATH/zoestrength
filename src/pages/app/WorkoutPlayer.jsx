@@ -179,7 +179,6 @@ export default function WorkoutPlayer() {
     return true
   })
 
-  // removed partial check
     for (let s = 1; s <= ex.sets; s++) {
       if (setLogs[`${ex.id}-${s}`]?.completed) return true
     }

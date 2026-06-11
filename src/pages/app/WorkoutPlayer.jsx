@@ -239,18 +239,6 @@ export default function WorkoutPlayer() {
                 </div>
               ))
             })}
-            <button
-              onClick={() => exercises.forEach(ex => { if (!setLogs[`${ex.id}-1`]?.completed) toggleSet(ex.id, 1, null) })}
-              style={{
-                width: '100%', marginTop: 18, padding: '14px',
-                background: exercises.every(ex => setLogs[`${ex.id}-1`]?.completed) ? 'var(--teal)' : 'var(--dark)',
-                color: exercises.every(ex => setLogs[`${ex.id}-1`]?.completed) ? 'white' : '#D4A853',
-                border: 'none', borderRadius: 100, cursor: 'pointer',
-                fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.08em',
-              }}
-            >
-              {exercises.every(ex => setLogs[`${ex.id}-1`]?.completed) ? '✓ RUN DONE' : 'MARK RUN DONE'}
-            </button>
           </div>
           <textarea
             placeholder="Notes for this run..."

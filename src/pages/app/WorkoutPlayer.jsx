@@ -169,7 +169,6 @@ export default function WorkoutPlayer() {
       notes: Object.values(notes).filter(Boolean).join(' | '),
     }, { onConflict: 'user_id,workout_id' })
     setCompleted(true)
-    setShowFinishModal(false)
   }
 
   const allSetsComplete = exercises.length > 0 && exercises.every(ex => {
@@ -179,11 +178,6 @@ export default function WorkoutPlayer() {
     return true
   })
 
-    for (let s = 1; s <= ex.sets; s++) {
-      if (setLogs[`${ex.id}-${s}`]?.completed) return true
-    }
-    return false
-  })
 
   if (loading) return <LoadingScreen />
 

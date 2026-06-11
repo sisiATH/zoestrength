@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { STRIPE_LINKS } from '../lib/stripe'
 
 const MONTHLY_PRICE = '$14.99'
-const ANNUAL_PRICE = '$99.99'
+const ANNUAL_PRICE = '$119'
 
 const GOLD = '#D4A853'
 const ROSE = '#C4857A'
@@ -15,7 +15,7 @@ const MUTED = '#888882'
 const programs = [
   { id: 'strng', name: 'STRNG', tag: '8 weeks', description: 'Heavy compound lifting built for women who want to get seriously strong. Progressive overload, SIT finishers, built to last.', color: GOLD, textColor: DARK, weeks: 8, days: 6 },
   { id: 'cycle-synched', name: 'Cycle Synched Reset', tag: '4 weeks', description: 'Training and recovery mapped to your cycle phases. Work with your hormones, not against them.', color: ROSE, textColor: WHITE, weeks: 4, days: 3 },
-  { id: '10k', name: 'Athens 10K Plan', tag: '10 weeks', description: 'Run your strongest 10K with integrated strength work. No junk miles — every session has a purpose.', color: TEAL, textColor: WHITE, weeks: 10, days: 5 },
+  { id: '10k', name: 'Athens 10K Plan', tag: '14 weeks', description: 'Run your strongest 10K with integrated strength work. No junk miles — every session has a purpose.', color: TEAL, textColor: WHITE, weeks: 14, days: 5 },
   { id: 'coming-soon', name: 'More coming', tag: 'ongoing', description: 'Half marathon plan, STRNG Part 2, and more added regularly. One subscription, everything included.', color: '#EBEBЕ7', textColor: MUTED, soon: true },
 ]
 
@@ -118,7 +118,7 @@ export default function LandingPage() {
               After struggling with RED-S, I had to change the way I train. Now I focus on balance between running, strength, and recovery in a way that actually supports my health — especially moving through my 40s.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: '#555550', maxWidth: 580, marginBottom: 16 }}>
-              I'm based in Athens, Greece — the birthplace of the marathon, and a runner's dream. If you like hills. And heat. And the occasional stray dog joining you for a kilometre. There are so many run clubs, community races, and organised events here that I could theoretically be racing every weekend. I choose not to, because I value my legs and also my sanity. These are the programs I actually use to train for races while body-recomping.
+              I'm based in Athens, Greece — the birthplace of the marathon, and a runner's dream. If you like hills. And heat. There are so many run clubs, community races, and organised events here that I could theoretically be racing every weekend. I choose not to, because I value my legs and also my sanity. These are the programs I actually use to train for races while body-recomping.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: '#555550', maxWidth: 580 }}>
               I'm not a professional runner or influencer — just a real woman with a real body that needs real work. If you're trying to find that same balance between performance, strength, and everyday life — this is for you.
@@ -238,19 +238,19 @@ function PricingBlock({ billingCycle, setBillingCycle, discountCode, setDiscount
             transition: 'all 0.2s', textTransform: 'capitalize',
           }}>
             {cycle}
-            {cycle === 'annual' && <span style={{ marginLeft: 6, fontSize: 10, background: GOLD, color: DARK, padding: '2px 6px', borderRadius: 4, fontWeight: 800 }}>SAVE 45%</span>}
+            {cycle === 'annual' && <span style={{ marginLeft: 6, fontSize: 10, background: GOLD, color: DARK, padding: '2px 6px', borderRadius: 4, fontWeight: 800 }}>SAVE 34%</span>}
           </button>
         ))}
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-        <span style={{ fontFamily: 'Bebas Neue', fontSize: 56, color: DARK, lineHeight: 1 }}>{billingCycle === 'annual' ? '$99.99' : '$14.99'}</span>
-        <span style={{ color: MUTED, fontSize: 14 }}>{billingCycle === 'annual' ? '/ year ($8.33/mo)' : '/ month'}</span>
+        <span style={{ fontFamily: 'Bebas Neue', fontSize: 56, color: DARK, lineHeight: 1 }}>{billingCycle === 'annual' ? '$119' : '$14.99'}</span>
+        <span style={{ color: MUTED, fontSize: 14 }}>{billingCycle === 'annual' ? '/ year ($9.92/mo)' : '/ month'}</span>
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
         <input type="text" placeholder="Discount code" value={discountCode} onChange={e => setDiscountCode(e.target.value.toUpperCase())} style={{ flex: 1, padding: '12px 16px', borderRadius: 100, border: '1px solid #E0E0DC', fontSize: 13, fontFamily: 'DM Sans', background: '#FFFFFF', outline: 'none', letterSpacing: '0.05em' }} />
       </div>
       <a href={stripeLink} style={{ display: 'block', textAlign: 'center', background: GOLD, color: DARK, padding: '18px 40px', borderRadius: 100, fontFamily: 'Bebas Neue', fontSize: 20, letterSpacing: '0.08em', textDecoration: 'none', boxShadow: '0 4px 24px rgba(212,168,83,0.3)' }}>
-        START TRAINING — {billingCycle === 'annual' ? '$99.99' : '$14.99'}
+        START TRAINING — {billingCycle === 'annual' ? '$119' : '$14.99'}
       </a>
       <p style={{ fontSize: 12, color: MUTED, textAlign: 'center' }}>14-day free trial · Cancel anytime · All programs included</p>
     </div>

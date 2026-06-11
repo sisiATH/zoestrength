@@ -230,6 +230,11 @@ export default function WorkoutPlayer() {
                       {ex.exercises?.name}{rounds > 1 ? ` — round ${r + 1}/${rounds}` : ''}
                     </span>
                     {ex.reps && <span style={{ fontSize: 14, color: 'var(--text-muted)', marginLeft: 8 }}>{ex.reps}</span>}
+                    {r === 0 && ex.exercises?.description && (
+                      <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4, lineHeight: 1.5 }}>
+                        {ex.exercises.description}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))

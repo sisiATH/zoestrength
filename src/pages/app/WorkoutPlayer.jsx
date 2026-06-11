@@ -169,11 +169,15 @@ export default function WorkoutPlayer() {
       notes: Object.values(notes).filter(Boolean).join(' | '),
     }, { onConflict: 'user_id,workout_id' })
     setCompleted(true)
-    setShowFinishModal(false)
   }
 
   const allSetsComplete = exercises.length > 0 && exercises.every(ex => {
-  // removed partial check
+    for (let s = 1; s <= ex.sets; s++) {
+      if (!setLogs[`${ex.id}-${s}`]?.completed) return false
+    }
+    return true
+  })
+
   if (loading) return <LoadingScreen />
 
   return (

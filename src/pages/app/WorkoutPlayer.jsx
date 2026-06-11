@@ -14,7 +14,7 @@ export default function WorkoutPlayer() {
   const [activeExercise, setActiveExercise] = useState(null)
   const [restTimer, setRestTimer] = useState(null)
   const [holdTimer, setHoldTimer] = useState(null)
-  const holdTimerRef = useRef(null)
+  const holdTimerRef = useRef(null) // { seconds, max }
   const [completed, setCompleted] = useState(false)
   const [loading, setLoading] = useState(true)
   const timerRef = useRef(null)
@@ -175,3 +175,203 @@ export default function WorkoutPlayer() {
         </div>
       </div>
 
+      {/* Exercise list */}
+      <div style={{ padding: '16px', paddingTop: 16 }}>
+        {exercises.map((ex, idx) => {
+          const isActive = activeExercise === ex.id
+          const repsArr = ex.reps.split('-')
+
+          return (
+            <div key={ex.id} style={{
+              background: 'var(--white)', borderRadius: 14,
+              marginBottom: 12, overflow: 'hidden',
+              border: '1px solid var(--mid)',
+            }}>
+              {/* Exercise header */}
+              <button
+                onClick={() => setActiveExercise(isActive ? null : ex.id)}
+                style={{
+                  width: '100%', padding: '16px 18px',
+                  background: 'transparent', border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: 14,
+                }}
+              >
+                <div style={{
+                  width: 36, height: 36, borderRadius: '50%',
+                  background: '#F5F5F2', border: '2px solid #0D0D0D', display: 'flex',
+                  alignItems: 'center', justifyContent: 'center',
+                  fontFamily: 'Bebas Neue', fontSize: 16, color: '#D4A853',
+                  flexShrink: 0,
+                }}>{idx + 1}</div>
+                <div style={{ flex: 1, textAlign: 'left' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: 17, fontWeight: 600, color: '#0D0D0D' }}>
+                      {ex.exercises?.name}
+                    </span>
+                    {ex.section && (
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
+                        textTransform: 'uppercase', color: '#1B6B7B',
+                        background: '#E8F4F6', padding: '2px 8px', borderRadius: 4,
+                      }}>{ex.section}</span>
+                    )}
+                  </div>
+                  <div style={{ fontSize: 14, color: '#888882', marginTop: 4 }}>
+                    {ex.sets} sets · {ex.reps} reps
+                    {ex.rest_seconds && ` · ${ex.rest_seconds}s rest`}
+                  </div>
+                </div>
+                <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>
+                  {isActive ? '▲' : '▼'}
+                </span>
+              </button>
+
+              {/* Expanded exercise detail */}
+              {isActive && (
+                <div style={{ borderTop: '1px solid var(--mid)' }}>
+                  {/* Video embed placeholder */}
+                  {ex.exercises?.video_url && (
+                    <div style={{ padding: '0 18px 16px' }}>
+                      <iframe
+                        src={ex.exercises.video_url}
+                        style={{ width: '100%', aspectRatio: '16/9', borderRadius: 10, border: 'none' }}
+                        allowFullScreen
+                      />
+                    </div>
+                  )}
+
+                  {/* Coaching cues */}
+                  {ex.exercises?.description && (
+                    <div style={{ padding: '0 18px 16px' }}>
+                      <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                        {ex.exercises.description}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Sets table */}
+                  <div style={{ padding: '0 18px 18px' }}>
+                    <div style={{
+                      display: 'grid', gridTemplateColumns: '32px 1fr 1fr 36px',
+                      gap: 8, marginBottom: 8,
+                    }}>
+                      {['Set', 'Previous', 'kg', ''].map((h, i) => (
+                        <div key={i} style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{h}</div>
+                      ))}
+                    </div>
+
+                    {Array.from({ length: ex.sets }, (_, i) => {
+                      const setNum = i + 1
+                      const logKey = `${ex.id}-${setNum}`
+                      const log = setLogs[logKey] || {}
+                      const prevWeight = prevWeights[ex.id]?.[setNum]
+                      const targetReps = repsArr[i] || repsArr[repsArr.length - 1]
+                      const isDone = log.completed
+
+                      return (
+                        <div key={setNum} style={{
+                          display: 'grid', gridTemplateColumns: '32px 1fr 1fr 36px',
+                          gap: 8, marginBottom: 6, alignItems: 'center',
+                          opacity: isDone ? 0.5 : 1,
+                        }}>
+                          <div style={{
+                            fontFamily: 'Bebas Neue', fontSize: 16, color: 'var(--dark)',
+                          }}>{setNum}</div>
+                          <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+                            {prevWeight ? `${prevWeight}kg` : '—'}
+                            <span style={{ color: '#B0B0AA', marginLeft: 4 }}>× {targetReps}</span>
+                          </div>
+                          <input
+                            type="number"
+                            placeholder={prevWeight || '0'}
+                            value={log.weight || ''}
+                            onChange={e => updateSetWeight(ex.id, setNum, e.target.value)}
+                            disabled={isDone}
+                            style={{
+                              padding: '8px 10px', borderRadius: 8,
+                              border: '1px solid var(--mid)', fontSize: 14,
+                              background: isDone ? '#F8F8F6' : 'white',
+                              width: '100%', fontFamily: 'DM Sans',
+                              outline: 'none',
+                            }}
+                          />
+                          <button
+                            onClick={() => toggleSet(ex.id, setNum, ex.rest_seconds)}
+                            style={{
+                              width: 36, height: 36, borderRadius: '50%',
+                              background: isDone ? 'var(--teal)' : 'var(--mid)',
+                              border: 'none', cursor: 'pointer',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              fontSize: 14, color: isDone ? 'white' : 'var(--text-muted)',
+                              transition: 'all 0.15s',
+                            }}
+                          >
+                            ✓
+                          </button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Complete workout button */}
+      {!completed && (
+        <div style={{
+          position: 'fixed', bottom: 72, left: 0, right: 0,
+          padding: '16px 20px', background: 'var(--light)',
+          borderTop: '1px solid var(--mid)', maxWidth: 600, margin: '0 auto',
+        }}>
+          <button
+            onClick={completeWorkout}
+            disabled={!allSetsComplete}
+            style={{
+              width: '100%', padding: '16px',
+              background: allSetsComplete ? 'var(--dark)' : 'var(--mid)',
+              color: allSetsComplete ? '#D4A853' : 'var(--text-muted)',
+              border: 'none', borderRadius: 100, cursor: allSetsComplete ? 'pointer' : 'not-allowed',
+              fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em',
+              transition: 'all 0.2s',
+            }}
+          >
+            {allSetsComplete ? 'COMPLETE WORKOUT →' : 'COMPLETE ALL SETS TO FINISH'}
+          </button>
+        </div>
+      )}
+
+      {completed && (
+        <div style={{
+          position: 'fixed', bottom: 72, left: 0, right: 0,
+          padding: '16px 20px', maxWidth: 600, margin: '0 auto',
+        }}>
+          <button onClick={() => navigate(-1)} style={{
+            width: '100%', padding: '16px',
+            background: 'var(--teal)', color: 'white',
+            border: 'none', borderRadius: 100, cursor: 'pointer',
+            fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em',
+          }}>
+            ✓ WORKOUT COMPLETE — BACK TO PROGRAM
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function LoadingScreen() {
+  return (
+    <div style={{ padding: 24 }}>
+      {[1, 2, 3, 4].map(i => (
+        <div key={i} style={{
+          height: 72, background: '#E8E8E4', borderRadius: 14,
+          marginBottom: 10, animation: 'shimmer 1.5s infinite',
+        }} />
+      ))}
+      <style>{`@keyframes shimmer { 0%,100%{opacity:0.5} 50%{opacity:1} }`}</style>
+    </div>
+  )
+}

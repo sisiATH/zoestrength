@@ -4,8 +4,12 @@ export const STRIPE_LINKS = {
 }
 
 export const PRICING = {
-  monthly: '$14.99',
-  annual: '$119',
-  annualPerMonth: '$9.92',
-  savings: '34%',
+  monthly: {
+    price: '$14.99',
+    perMonth: '$14.99/mo',
+  },
+  annual: {
+    price: '$119',
+    perMonth: '$9.92/mo',
+  },
 }

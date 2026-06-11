@@ -9,26 +9,30 @@ export default function WorkoutPlayer() {
   const navigate = useNavigate()
   const [workout, setWorkout] = useState(null)
   const [exercises, setExercises] = useState([])
-  const [setLogs, setSetLogs] = useState({}) // { workoutExerciseId: { setNum: { weight, reps, completed } } }
-  const [prevWeights, setPrevWeights] = useState({}) // { exerciseId: { setNum: weight } }
+  const [setLogs, setSetLogs] = useState({})
+  const [prevWeights, setPrevWeights] = useState({})
   const [activeExercise, setActiveExercise] = useState(null)
   const [restTimer, setRestTimer] = useState(null)
   const [holdTimer, setHoldTimer] = useState(null)
-  const holdTimerRef = useRef(null) // { seconds, max }
+  const [notes, setNotes] = useState({})
   const [completed, setCompleted] = useState(false)
   const [loading, setLoading] = useState(true)
   const timerRef = useRef(null)
+  const holdTimerRef = useRef(null)
+  const audioCtxRef = useRef(null)
 
   useEffect(() => { fetchWorkout() }, [workoutId])
-
   useEffect(() => {
-    return () => { if (timerRef.current) clearInterval(timerRef.current) }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+      if (holdTimerRef.current) clearInterval(holdTimerRef.current)
+    }
   }, [])
 
   async function fetchWorkout() {
     const { data: wo } = await supabase
       .from('workouts')
-      .select(`*, weeks(programs(*))`)
+      .select('*, weeks(programs(*))')
       .eq('id', workoutId)
       .single()
 
@@ -37,24 +41,21 @@ export default function WorkoutPlayer() {
 
     const { data: exList } = await supabase
       .from('workout_exercises')
-      .select(`*, exercises(*)`)
+      .select('*, exercises(*)')
       .eq('workout_id', workoutId)
       .order('sort_order')
 
     if (exList) {
       setExercises(exList)
-
-      // Fetch previous session weights for each exercise
       for (const ex of exList) {
         const { data: prev } = await supabase
           .from('set_logs')
           .select('set_number, weight_kg, reps_completed')
           .eq('user_id', user.id)
           .eq('workout_exercise_id', ex.id)
-          .neq('workout_id', workoutId) // not current session
+          .neq('workout_id', workoutId)
           .order('logged_at', { ascending: false })
           .limit(ex.sets)
-
         if (prev?.length) {
           setPrevWeights(p => ({
             ...p,
@@ -64,17 +65,32 @@ export default function WorkoutPlayer() {
       }
     }
 
-    // Check if already completed
     const { data: comp } = await supabase
       .from('workout_completions')
       .select('id')
       .eq('user_id', user.id)
       .eq('workout_id', workoutId)
       .single()
-
     if (comp) setCompleted(true)
-
     setLoading(false)
+  }
+
+  function beep() {
+    try {
+      if (!audioCtxRef.current) return
+      const ctx = audioCtxRef.current
+      if (ctx.state === 'suspended') ctx.resume()
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.frequency.value = 880
+      osc.type = 'sine'
+      gain.gain.setValueAtTime(0.3, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15)
+      osc.start(ctx.currentTime)
+      osc.stop(ctx.currentTime + 0.15)
+    } catch(e) {}
   }
 
   function startRestTimer(seconds) {
@@ -86,53 +102,74 @@ export default function WorkoutPlayer() {
           clearInterval(timerRef.current)
           return null
         }
-        return { ...prev, seconds: prev.seconds - 1 }
+        const next = prev.seconds - 1
+        if (next <= 3) beep()
+        return { ...prev, seconds: next }
+      })
+    }, 1000)
+  }
+
+  function adjustRestTimer(delta) {
+    setRestTimer(prev => {
+      if (!prev) return null
+      const next = Math.max(1, prev.seconds + delta)
+      return { ...prev, seconds: next, max: Math.max(prev.max, next) }
+    })
+  }
+
+  function startHoldTimer(seconds, onComplete) {
+    if (holdTimerRef.current) clearInterval(holdTimerRef.current)
+    setHoldTimer({ seconds, max: seconds })
+    holdTimerRef.current = setInterval(() => {
+      setHoldTimer(prev => {
+        if (!prev || prev.seconds <= 1) {
+          clearInterval(holdTimerRef.current)
+          setHoldTimer(null)
+          if (onComplete) onComplete()
+          return null
+        }
+        const next = prev.seconds - 1
+        if (next <= 3) beep()
+        return { ...prev, seconds: next }
       })
     }, 1000)
   }
 
   async function toggleSet(weId, setNum, restSeconds) {
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)()
+    }
     const key = `${weId}-${setNum}`
     const current = setLogs[key] || {}
     const nowCompleted = !current.completed
-
-    setSetLogs(prev => ({
-      ...prev,
-      [key]: { ...current, completed: nowCompleted }
-    }))
-
-    if (nowCompleted && restSeconds) {
-      startRestTimer(restSeconds)
-    }
-
-    // Save to Supabase
+    setSetLogs(prev => ({ ...prev, [key]: { ...current, completed: nowCompleted } }))
+    if (nowCompleted && restSeconds) startRestTimer(restSeconds)
     await supabase.from('set_logs').upsert({
-      user_id: user.id,
-      workout_exercise_id: weId,
-      workout_id: workoutId,
-      set_number: setNum,
-      weight_kg: current.weight || null,
-      reps_completed: current.reps || null,
-      completed: nowCompleted,
+      user_id: user.id, workout_exercise_id: weId, workout_id: workoutId,
+      set_number: setNum, weight_kg: current.weight || null,
+      reps_completed: current.reps || null, completed: nowCompleted,
       logged_at: new Date().toISOString(),
     }, { onConflict: 'user_id,workout_exercise_id,set_number,workout_id' })
   }
 
   function updateSetWeight(weId, setNum, weight) {
     const key = `${weId}-${setNum}`
-    setSetLogs(prev => ({
-      ...prev,
-      [key]: { ...prev[key], weight }
-    }))
+    setSetLogs(prev => ({ ...prev, [key]: { ...prev[key], weight } }))
+  }
+
+  function updateSetReps(weId, setNum, reps) {
+    const key = `${weId}-${setNum}`
+    setSetLogs(prev => ({ ...prev, [key]: { ...prev[key], reps } }))
   }
 
   async function completeWorkout() {
     await supabase.from('workout_completions').upsert({
-      user_id: user.id,
-      workout_id: workoutId,
+      user_id: user.id, workout_id: workoutId,
       completed_at: new Date().toISOString(),
+      notes: Object.values(notes).filter(Boolean).join(' | '),
     }, { onConflict: 'user_id,workout_id' })
     setCompleted(true)
+    setShowFinishModal(false)
   }
 
   const allSetsComplete = exercises.length > 0 && exercises.every(ex => {
@@ -140,6 +177,13 @@ export default function WorkoutPlayer() {
       if (!setLogs[`${ex.id}-${s}`]?.completed) return false
     }
     return true
+  })
+
+  // removed partial check
+    for (let s = 1; s <= ex.sets; s++) {
+      if (setLogs[`${ex.id}-${s}`]?.completed) return true
+    }
+    return false
   })
 
   if (loading) return <LoadingScreen />
@@ -176,18 +220,18 @@ export default function WorkoutPlayer() {
       </div>
 
       {/* Exercise list */}
-      <div style={{ padding: '16px', paddingTop: 16 }}>
+      <div style={{ padding: '16px' }}>
         {exercises.map((ex, idx) => {
           const isActive = activeExercise === ex.id
-          const repsArr = ex.reps.split('-')
+          const repsArr = ex.reps ? ex.reps.split('-') : ['—']
 
           return (
             <div key={ex.id} style={{
               background: 'var(--white)', borderRadius: 14,
               marginBottom: 12, overflow: 'hidden',
-              border: '1px solid var(--mid)',
+              border: isActive ? '1px solid #1B6B7B' : '1px solid var(--mid)',
+              transition: 'border 0.2s',
             }}>
-              {/* Exercise header */}
               <button
                 onClick={() => setActiveExercise(isActive ? null : ex.id)}
                 style={{
@@ -217,8 +261,9 @@ export default function WorkoutPlayer() {
                     )}
                   </div>
                   <div style={{ fontSize: 14, color: '#888882', marginTop: 4 }}>
-                    {ex.sets} sets · {ex.reps} reps
-                    {ex.rest_seconds && ` · ${ex.rest_seconds}s rest`}
+                    {ex.sets} {ex.sets === 1 ? 'set' : 'sets'} · {ex.reps} reps
+                    {ex.hold_seconds ? ` · ${ex.hold_seconds}s hold` : ''}
+                    {ex.rest_seconds ? ` · ${ex.rest_seconds}s rest` : ''}
                   </div>
                 </div>
                 <span style={{ color: 'var(--text-muted)', fontSize: 12 }}>
@@ -226,12 +271,78 @@ export default function WorkoutPlayer() {
                 </span>
               </button>
 
-              {/* Expanded exercise detail */}
               {isActive && (
                 <div style={{ borderTop: '1px solid var(--mid)' }}>
-                  {/* Video embed placeholder */}
+
+                  {/* Hold timer */}
+                  {holdTimer && activeExercise === ex.id && (
+                    <div style={{
+                      margin: '12px 16px 0',
+                      background: '#C4857A',
+                      borderRadius: 10, padding: '12px 16px',
+                      display: 'flex', alignItems: 'center', gap: 12,
+                    }}>
+                      <div>
+                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Hold</div>
+                        <div style={{ fontFamily: 'Bebas Neue', fontSize: 36, color: 'white', lineHeight: 1 }}>
+                          {holdTimer.seconds}s
+                        </div>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: 4, height: 4 }}>
+                          <div style={{
+                            background: 'white', height: '100%', borderRadius: 4,
+                            width: `${(holdTimer.seconds / holdTimer.max) * 100}%`,
+                            transition: 'width 1s linear',
+                          }} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Rest timer */}
+                  {restTimer && activeExercise === ex.id && (
+                    <div style={{
+                      margin: '12px 16px 0',
+                      background: restTimer.seconds <= 3 ? '#C4857A' : 'var(--teal)',
+                      borderRadius: 10, padding: '12px 16px',
+                      display: 'flex', alignItems: 'center', gap: 12,
+                      transition: 'background 0.3s',
+                    }}>
+                      <div>
+                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Rest</div>
+                        <div style={{ fontFamily: 'Bebas Neue', fontSize: 36, color: 'white', lineHeight: 1 }}>
+                          {Math.floor(restTimer.seconds / 60)}:{String(restTimer.seconds % 60).padStart(2, '0')}
+                        </div>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: 4, height: 4 }}>
+                          <div style={{
+                            background: '#D4A853', height: '100%', borderRadius: 4,
+                            width: `${(restTimer.seconds / restTimer.max) * 100}%`,
+                            transition: 'width 1s linear',
+                          }} />
+                        </div>
+                        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                          {[-15, -10, +10, +15].map(d => (
+                            <button key={d} onClick={() => adjustRestTimer(d)} style={{
+                              flex: 1, padding: '4px 0', borderRadius: 6,
+                              background: 'rgba(255,255,255,0.15)', border: 'none',
+                              color: 'white', fontSize: 11, cursor: 'pointer', fontFamily: 'DM Sans',
+                            }}>{d > 0 ? '+' : ''}{d}s</button>
+                          ))}
+                        </div>
+                      </div>
+                      <button onClick={() => { clearInterval(timerRef.current); setRestTimer(null) }} style={{
+                        background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 8,
+                        color: 'white', padding: '6px 12px', cursor: 'pointer', fontSize: 12,
+                      }}>Skip</button>
+                    </div>
+                  )}
+
+                  {/* Video */}
                   {ex.exercises?.video_url && (
-                    <div style={{ padding: '0 18px 16px' }}>
+                    <div style={{ padding: '12px 18px 0' }}>
                       <iframe
                         src={ex.exercises.video_url}
                         style={{ width: '100%', aspectRatio: '16/9', borderRadius: 10, border: 'none' }}
@@ -240,22 +351,31 @@ export default function WorkoutPlayer() {
                     </div>
                   )}
 
-                  {/* Coaching cues */}
+                  {/* Description bullets */}
                   {ex.exercises?.description && (
-                    <div style={{ padding: '0 18px 16px' }}>
-                      <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                        {ex.exercises.description}
-                      </p>
+                    <div style={{ padding: '12px 18px 0' }}>
+                      <p style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, marginBottom: 6 }}>About this exercise</p>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        {ex.exercises.description.split(/\n|·|•|—/).map((line, i) => {
+                          const clean = line.trim()
+                          return clean ? (
+                            <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                              <span style={{ marginTop: 6, width: 6, height: 6, borderRadius: '50%', background: '#1B6B7B', flexShrink: 0 }} />
+                              <span>{clean}</span>
+                            </li>
+                          ) : null
+                        })}
+                      </ul>
                     </div>
                   )}
 
                   {/* Sets table */}
-                  <div style={{ padding: '0 18px 18px' }}>
+                  <div style={{ padding: '12px 18px 8px' }}>
                     <div style={{
-                      display: 'grid', gridTemplateColumns: '32px 1fr 1fr 36px',
+                      display: 'grid', gridTemplateColumns: '28px 1fr 80px 60px 36px',
                       gap: 8, marginBottom: 8,
                     }}>
-                      {['Set', 'Previous', 'kg', ''].map((h, i) => (
+                      {['Set', 'Previous', 'kg', 'reps', ''].map((h, i) => (
                         <div key={i} style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{h}</div>
                       ))}
                     </div>
@@ -270,16 +390,14 @@ export default function WorkoutPlayer() {
 
                       return (
                         <div key={setNum} style={{
-                          display: 'grid', gridTemplateColumns: '32px 1fr 1fr 36px',
+                          display: 'grid', gridTemplateColumns: '28px 1fr 80px 60px 36px',
                           gap: 8, marginBottom: 6, alignItems: 'center',
                           opacity: isDone ? 0.5 : 1,
                         }}>
-                          <div style={{
-                            fontFamily: 'Bebas Neue', fontSize: 16, color: 'var(--dark)',
-                          }}>{setNum}</div>
-                          <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+                          <div style={{ fontFamily: 'Bebas Neue', fontSize: 16, color: 'var(--dark)' }}>{setNum}</div>
+                          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                             {prevWeight ? `${prevWeight}kg` : '—'}
-                            <span style={{ color: '#B0B0AA', marginLeft: 4 }}>× {targetReps}</span>
+                            <span style={{ color: '#B0B0AA', marginLeft: 4 }}>×{targetReps}</span>
                           </div>
                           <input
                             type="number"
@@ -288,15 +406,33 @@ export default function WorkoutPlayer() {
                             onChange={e => updateSetWeight(ex.id, setNum, e.target.value)}
                             disabled={isDone}
                             style={{
-                              padding: '8px 10px', borderRadius: 8,
+                              padding: '8px 8px', borderRadius: 8,
                               border: '1px solid var(--mid)', fontSize: 14,
                               background: isDone ? '#F8F8F6' : 'white',
-                              width: '100%', fontFamily: 'DM Sans',
-                              outline: 'none',
+                              width: '100%', fontFamily: 'DM Sans', outline: 'none',
+                            }}
+                          />
+                          <input
+                            type="number"
+                            placeholder={targetReps}
+                            value={log.reps || ''}
+                            onChange={e => updateSetReps(ex.id, setNum, e.target.value)}
+                            disabled={isDone}
+                            style={{
+                              padding: '8px 8px', borderRadius: 8,
+                              border: '1px solid var(--mid)', fontSize: 14,
+                              background: isDone ? '#F8F8F6' : 'white',
+                              width: '100%', fontFamily: 'DM Sans', outline: 'none',
                             }}
                           />
                           <button
-                            onClick={() => toggleSet(ex.id, setNum, ex.rest_seconds)}
+                            onClick={() => {
+                              if (ex.hold_seconds && !isDone) {
+                                startHoldTimer(ex.hold_seconds, () => toggleSet(ex.id, setNum, ex.rest_seconds))
+                              } else {
+                                toggleSet(ex.id, setNum, ex.rest_seconds)
+                              }
+                            }}
                             style={{
                               width: 36, height: 36, borderRadius: '50%',
                               background: isDone ? 'var(--teal)' : 'var(--mid)',
@@ -305,12 +441,26 @@ export default function WorkoutPlayer() {
                               fontSize: 14, color: isDone ? 'white' : 'var(--text-muted)',
                               transition: 'all 0.15s',
                             }}
-                          >
-                            ✓
-                          </button>
+                          >✓</button>
                         </div>
                       )
                     })}
+                  </div>
+
+                  {/* Per-exercise notes */}
+                  <div style={{ padding: '0 18px 16px' }}>
+                    <textarea
+                      placeholder="Notes for this exercise..."
+                      value={notes[ex.id] || ''}
+                      onChange={e => setNotes(prev => ({ ...prev, [ex.id]: e.target.value }))}
+                      rows={2}
+                      style={{
+                        width: '100%', padding: '10px 12px', borderRadius: 10,
+                        border: '1px solid var(--mid)', fontSize: 13,
+                        fontFamily: 'DM Sans', resize: 'vertical', outline: 'none',
+                        background: '#FAFAF8', color: '#555550', boxSizing: 'border-box',
+                      }}
+                    />
                   </div>
                 </div>
               )}
@@ -319,27 +469,19 @@ export default function WorkoutPlayer() {
         })}
       </div>
 
-      {/* Complete workout button */}
+      {/* Finish button */}
       {!completed && (
         <div style={{
           position: 'fixed', bottom: 72, left: 0, right: 0,
           padding: '16px 20px', background: 'var(--light)',
           borderTop: '1px solid var(--mid)', maxWidth: 600, margin: '0 auto',
         }}>
-          <button
-            onClick={completeWorkout}
-            disabled={!allSetsComplete}
-            style={{
-              width: '100%', padding: '16px',
-              background: allSetsComplete ? 'var(--dark)' : 'var(--mid)',
-              color: allSetsComplete ? '#D4A853' : 'var(--text-muted)',
-              border: 'none', borderRadius: 100, cursor: allSetsComplete ? 'pointer' : 'not-allowed',
-              fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em',
-              transition: 'all 0.2s',
-            }}
-          >
-            {allSetsComplete ? 'COMPLETE WORKOUT →' : 'COMPLETE ALL SETS TO FINISH'}
-          </button>
+          <button onClick={completeWorkout} style={{
+            width: '100%', padding: '16px',
+            background: 'var(--dark)', color: '#D4A853',
+            border: 'none', borderRadius: 100, cursor: 'pointer',
+            fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em',
+          }}>FINISH WORKOUT</button>
         </div>
       )}
 
@@ -353,11 +495,11 @@ export default function WorkoutPlayer() {
             background: 'var(--teal)', color: 'white',
             border: 'none', borderRadius: 100, cursor: 'pointer',
             fontFamily: 'Bebas Neue', fontSize: 18, letterSpacing: '0.08em',
-          }}>
-            ✓ WORKOUT COMPLETE — BACK TO PROGRAM
-          </button>
+          }}>✓ WORKOUT COMPLETE — BACK TO PROGRAM</button>
         </div>
       )}
+
+
     </div>
   )
 }

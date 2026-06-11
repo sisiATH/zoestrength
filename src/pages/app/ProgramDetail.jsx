@@ -204,9 +204,6 @@ export default function ProgramDetail() {
                 <div style={{ borderTop: '1px solid var(--mid)' }}>
                   {(week.workouts || []).map((workout, idx) => {
                     const isDone = completedWorkoutIds.has(workout.id)
-                    const isRun = workout.title?.toLowerCase().includes('run') ||
-                      workout.title?.toLowerCase().includes('walk')
-
                     return (
                       <div
                         key={workout.id}
@@ -241,7 +238,7 @@ export default function ProgramDetail() {
                           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                             <div style={{
                               width: 32, height: 32, borderRadius: '50%',
-                              background: isDone ? 'var(--teal)' : isRun ? '#C4857A' : program.color,
+                              background: isDone ? 'var(--teal)' : program.color,
                               display: 'flex', alignItems: 'center', justifyContent: 'center',
                               fontSize: isDone ? 14 : 13,
                               color: isDone ? 'white' : program.text_color,

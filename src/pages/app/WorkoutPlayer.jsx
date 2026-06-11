@@ -169,6 +169,7 @@ export default function WorkoutPlayer() {
       notes: Object.values(notes).filter(Boolean).join(' | '),
     }, { onConflict: 'user_id,workout_id' })
     setCompleted(true)
+    setShowFinishModal(false)
   }
 
   const allSetsComplete = exercises.length > 0 && exercises.every(ex => {
@@ -178,6 +179,12 @@ export default function WorkoutPlayer() {
     return true
   })
 
+  // removed partial check
+    for (let s = 1; s <= ex.sets; s++) {
+      if (setLogs[`${ex.id}-${s}`]?.completed) return true
+    }
+    return false
+  })
 
   if (loading) return <LoadingScreen />
 
@@ -213,7 +220,7 @@ export default function WorkoutPlayer() {
       </div>
 
       {/* Exercise list */}
-      <div style={{ padding: '16px' }}>
+      <div style={{ padding: '16px', paddingTop: 80 }}>
         {exercises.map((ex, idx) => {
           const isActive = activeExercise === ex.id
           const repsArr = ex.reps ? ex.reps.split('-') : ['—']
@@ -317,7 +324,7 @@ export default function WorkoutPlayer() {
                           }} />
                         </div>
                         <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-                          {[-15, -10, +10, +15].map(d => (
+                          {[-10, +10].map(d => (
                             <button key={d} onClick={() => adjustRestTimer(d)} style={{
                               flex: 1, padding: '4px 0', borderRadius: 6,
                               background: 'rgba(255,255,255,0.15)', border: 'none',

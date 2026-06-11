@@ -178,6 +178,8 @@ export default function WorkoutPlayer() {
     return true
   })
 
+  const isRun = workout?.title?.toLowerCase().includes('run')
+
   if (loading) return <LoadingScreen />
 
   return (
@@ -211,7 +213,52 @@ export default function WorkoutPlayer() {
         </div>
       </div>
 
+      {/* Run view: one card, one check */}
+      {isRun && (
+        <div style={{ padding: '16px', paddingTop: 80 }}>
+          <div style={{ background: 'var(--white)', borderRadius: 14, border: '1px solid var(--mid)', padding: '18px' }}>
+            {exercises.map((ex, idx) => (
+              <div key={ex.id} style={{
+                display: 'flex', gap: 10, alignItems: 'baseline',
+                marginBottom: idx < exercises.length - 1 ? 10 : 0,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1B6B7B', flexShrink: 0 }} />
+                <div>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dark)' }}>{ex.exercises?.name}</span>
+                  {ex.reps && <span style={{ fontSize: 14, color: 'var(--text-muted)', marginLeft: 8 }}>{ex.reps}</span>}
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={() => exercises.forEach(ex => { if (!setLogs[`${ex.id}-1`]?.completed) toggleSet(ex.id, 1, null) })}
+              style={{
+                width: '100%', marginTop: 18, padding: '14px',
+                background: exercises.every(ex => setLogs[`${ex.id}-1`]?.completed) ? 'var(--teal)' : 'var(--dark)',
+                color: exercises.every(ex => setLogs[`${ex.id}-1`]?.completed) ? 'white' : '#D4A853',
+                border: 'none', borderRadius: 100, cursor: 'pointer',
+                fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.08em',
+              }}
+            >
+              {exercises.every(ex => setLogs[`${ex.id}-1`]?.completed) ? '✓ RUN DONE' : 'MARK RUN DONE'}
+            </button>
+          </div>
+          <textarea
+            placeholder="Notes for this run..."
+            value={notes['run'] || ''}
+            onChange={e => setNotes(prev => ({ ...prev, run: e.target.value }))}
+            rows={2}
+            style={{
+              width: '100%', marginTop: 12, padding: '10px 12px', borderRadius: 10,
+              border: '1px solid var(--mid)', fontSize: 13,
+              fontFamily: 'DM Sans', resize: 'vertical', outline: 'none',
+              background: '#FAFAF8', color: '#555550', boxSizing: 'border-box',
+            }}
+          />
+        </div>
+      )}
+
       {/* Exercise list */}
+      {!isRun && (
       <div style={{ padding: '16px', paddingTop: 80 }}>
         {exercises.map((ex, idx) => {
           const isActive = activeExercise === ex.id
@@ -460,6 +507,7 @@ export default function WorkoutPlayer() {
           )
         })}
       </div>
+      )}
 
       {/* Finish button */}
       {!completed && (

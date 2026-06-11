@@ -225,7 +225,7 @@ export default function WorkoutPlayer() {
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1B6B7B', flexShrink: 0 }} />
                 <div>
                   <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dark)' }}>{ex.exercises?.name}</span>
-                  {ex.reps && <span style={{ fontSize: 14, color: 'var(--text-muted)', marginLeft: 8 }}>{ex.reps}</span>}
+                  {ex.reps && <span style={{ fontSize: 14, color: 'var(--text-muted)', marginLeft: 8 }}>{ex.sets > 1 ? `${ex.sets} × ` : ''}{ex.reps}</span>}
                 </div>
               </div>
             ))}

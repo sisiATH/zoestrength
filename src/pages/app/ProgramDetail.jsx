@@ -12,9 +12,7 @@ export default function ProgramDetail() {
   const [completedWorkoutIds, setCompletedWorkoutIds] = useState(new Set())
   const [expandedWeeks, setExpandedWeeks] = useState(new Set())
   const [loading, setLoading] = useState(true)
-  const [dragState, setDragState] = useState(null) // { weekId, fromIdx, toIdx }
   const dragItem = useRef(null)
-  const dragOverItem = useRef(null)
 
   useEffect(() => { fetchProgram() }, [programId])
 
@@ -43,7 +41,6 @@ export default function ProgramDetail() {
     setCompletedWorkoutIds(completedIds)
 
     if (weeksData) {
-      // Sort workouts within each week by sort_order
       const sorted = weeksData.map(w => ({
         ...w,
         workouts: [...(w.workouts || [])].sort((a, b) => a.sort_order - b.sort_order)
@@ -83,9 +80,9 @@ export default function ProgramDetail() {
   }
 
   function handleDragEnter(weekId, idx) {
-    dragOverItem.current = { weekId, idx }
-    if (dragItem.current?.weekId !== weekId) return
-    if (dragItem.current?.idx === idx) return
+    if (!dragItem.current) return
+    if (dragItem.current.weekId !== weekId) return
+    if (dragItem.current.idx === idx) return
 
     setWeeks(prev => prev.map(w => {
       if (w.id !== weekId) return w
@@ -99,9 +96,6 @@ export default function ProgramDetail() {
 
   async function handleDragEnd(weekId) {
     dragItem.current = null
-    dragOverItem.current = null
-
-    // Save new sort_order to Supabase
     const week = weeks.find(w => w.id === weekId)
     if (!week) return
     for (let i = 0; i < week.workouts.length; i++) {
@@ -112,33 +106,11 @@ export default function ProgramDetail() {
     }
   }
 
-  // Touch drag support
-  function handleTouchStart(e, weekId, idx) {
-    dragItem.current = { weekId, idx }
-  }
-
-  function handleTouchMove(e, weekId) {
-    e.preventDefault()
-    const touch = e.touches[0]
-    const el = document.elementFromPoint(touch.clientX, touch.clientY)
-    const row = el?.closest('[data-workout-idx]')
-    if (!row) return
-    const toIdx = parseInt(row.dataset.workoutIdx)
-    if (isNaN(toIdx)) return
-    if (dragItem.current?.idx === toIdx) return
-    handleDragEnter(weekId, toIdx)
-  }
-
-  async function handleTouchEnd(weekId) {
-    await handleDragEnd(weekId)
-  }
-
   if (loading) return <div style={{ padding: 24 }}><LoadingSkeleton /></div>
   if (!program) return null
 
   return (
     <div style={{ maxWidth: 600, margin: '0 auto' }}>
-      {/* Header */}
       <div style={{
         background: '#FFFFFF', padding: '32px 20px 28px', borderBottom: '1px solid #E8E8E4',
         position: 'relative', overflow: 'hidden',
@@ -150,11 +122,6 @@ export default function ProgramDetail() {
             color: '#0D0D0D', fontSize: 14, fontWeight: 600,
             marginBottom: 20, display: 'flex', alignItems: 'center', gap: 6,
           }}>← Back</button>
-          <div style={{ position: 'absolute', right: -10, top: -10, opacity: 0.08 }}>
-            <svg width={140} height={182} viewBox="0 0 100 130" fill="none">
-              <polygon points="60,0 20,70 50,70 40,130 80,55 52,55" fill={program.text_color} />
-            </svg>
-          </div>
           <span style={{
             fontSize: 10, fontWeight: 700, letterSpacing: '0.14em',
             textTransform: 'uppercase', color: '#888882',
@@ -172,7 +139,6 @@ export default function ProgramDetail() {
         </div>
       </div>
 
-      {/* Weeks */}
       <div style={{ padding: '16px 16px 100px' }}>
         {weeks.map(week => {
           const { done, total } = getWeekProgress(week)
@@ -186,7 +152,6 @@ export default function ProgramDetail() {
               border: '1px solid var(--mid)',
               opacity: isComplete ? 0.6 : 1,
             }}>
-              {/* Week header */}
               <button
                 onClick={() => toggleWeek(week.id)}
                 style={{
@@ -235,7 +200,6 @@ export default function ProgramDetail() {
                 </span>
               </button>
 
-              {/* Workouts list */}
               {isExpanded && (
                 <div style={{ borderTop: '1px solid var(--mid)' }}>
                   {(week.workouts || []).map((workout, idx) => {
@@ -252,24 +216,18 @@ export default function ProgramDetail() {
                         onDragEnter={() => handleDragEnter(week.id, idx)}
                         onDragEnd={() => handleDragEnd(week.id)}
                         onDragOver={e => e.preventDefault()}
-                        onTouchStart={e => handleTouchStart(e, week.id, idx)}
-                        onTouchMove={e => handleTouchMove(e, week.id)}
-                        onTouchEnd={() => handleTouchEnd(week.id)}
                         style={{
                           display: 'flex', alignItems: 'center',
                           borderBottom: '1px solid var(--mid)',
                           background: isDone ? '#F8F8F6' : 'var(--white)',
-                          cursor: 'grab',
                         }}
                       >
-                        {/* Drag handle */}
                         <div style={{
                           padding: '14px 8px 14px 14px',
-                          color: 'var(--text-muted)', fontSize: 16,
+                          color: '#CCCCCC', fontSize: 18,
                           cursor: 'grab', userSelect: 'none',
                         }}>⠿</div>
 
-                        {/* Workout row */}
                         <button
                           onClick={() => navigate(`/app/workout/${workout.id}`)}
                           style={{
@@ -285,11 +243,11 @@ export default function ProgramDetail() {
                               width: 32, height: 32, borderRadius: '50%',
                               background: isDone ? 'var(--teal)' : isRun ? '#C4857A' : program.color,
                               display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              fontSize: isDone ? 14 : 12,
+                              fontSize: isDone ? 14 : 13,
                               color: isDone ? 'white' : program.text_color,
                               flexShrink: 0,
                             }}>
-                              {isDone ? '✓' : isRun ? '🏃' : workout.day_number}
+                              {isDone ? '✓' : workout.day_number}
                             </div>
                             <div style={{ textAlign: 'left' }}>
                               <div style={{
@@ -314,7 +272,7 @@ export default function ProgramDetail() {
                   <p style={{
                     fontSize: 11, color: 'var(--text-muted)', textAlign: 'center',
                     padding: '8px 0', margin: 0,
-                  }}>Hold and drag to reorder</p>
+                  }}>Drag to reorder</p>
                 </div>
               )}
             </div>

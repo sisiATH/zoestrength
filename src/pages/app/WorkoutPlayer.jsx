@@ -173,19 +173,7 @@ export default function WorkoutPlayer() {
   }
 
   const allSetsComplete = exercises.length > 0 && exercises.every(ex => {
-    for (let s = 1; s <= ex.sets; s++) {
-      if (!setLogs[`${ex.id}-${s}`]?.completed) return false
-    }
-    return true
-  })
-
   // removed partial check
-    for (let s = 1; s <= ex.sets; s++) {
-      if (setLogs[`${ex.id}-${s}`]?.completed) return true
-    }
-    return false
-  })
-
   if (loading) return <LoadingScreen />
 
   return (

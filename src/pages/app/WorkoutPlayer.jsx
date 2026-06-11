@@ -217,18 +217,23 @@ export default function WorkoutPlayer() {
       {isRun && (
         <div style={{ padding: '16px', paddingTop: 80 }}>
           <div style={{ background: 'var(--white)', borderRadius: 14, border: '1px solid var(--mid)', padding: '18px' }}>
-            {exercises.map((ex, idx) => (
-              <div key={ex.id} style={{
-                display: 'flex', gap: 10, alignItems: 'baseline',
-                marginBottom: idx < exercises.length - 1 ? 10 : 0,
-              }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1B6B7B', flexShrink: 0 }} />
-                <div>
-                  <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dark)' }}>{ex.exercises?.name}</span>
-                  {ex.reps && <span style={{ fontSize: 14, color: 'var(--text-muted)', marginLeft: 8 }}>{ex.sets > 1 ? `${ex.sets} × ` : ''}{ex.reps}</span>}
+            {exercises.flatMap((ex, idx) => {
+              const rounds = ex.sets > 1 ? ex.sets : 1
+              return Array.from({ length: rounds }, (_, r) => (
+                <div key={`${ex.id}-${r}`} style={{
+                  display: 'flex', gap: 10, alignItems: 'baseline',
+                  marginBottom: 10,
+                }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#1B6B7B', flexShrink: 0 }} />
+                  <div>
+                    <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--dark)' }}>
+                      {ex.exercises?.name}{rounds > 1 ? ` — round ${r + 1}/${rounds}` : ''}
+                    </span>
+                    {ex.reps && <span style={{ fontSize: 14, color: 'var(--text-muted)', marginLeft: 8 }}>{ex.reps}</span>}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            })}
             <button
               onClick={() => exercises.forEach(ex => { if (!setLogs[`${ex.id}-1`]?.completed) toggleSet(ex.id, 1, null) })}
               style={{

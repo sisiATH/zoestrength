@@ -2,3 +2,10 @@ export const STRIPE_LINKS = {
   annual: 'https://buy.stripe.com/14A28r8FPbEtajVcDCco004',
   monthly: 'https://buy.stripe.com/aFaaEXf4dgYN0JleLKco005',
 }
+
+export const PRICING = {
+  monthly: '$14.99',
+  annual: '$119',
+  annualPerMonth: '$9.92',
+  savings: '34%',
+}

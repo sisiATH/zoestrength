@@ -285,12 +285,12 @@ if (exercises.length === 0) {
           <button onClick={() => navigate(-1)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#0D0D0D', fontSize: 24, lineHeight: 1 }}>←</button>
           <h1 style={{ fontFamily: 'Bebas Neue', fontSize: 26, letterSpacing: '0.04em', color: '#0D0D0D', lineHeight: 1 }}>{workout?.title}</h1>
         </div>
-        <div style={{ padding: '48px 24px', textAlign: 'center' }}>
+        <div style={{ padding: '88px 24px', textAlign: 'center' }}>
           <p style={{ fontSize: 16, color: '#555550', lineHeight: 1.6, maxWidth: 420, margin: '0 auto 28px' }}>
             {workout?.description || 'Full rest today. Recovery is where the adaptation happens.'}
           </p>
           {!completed ? (
-            <button onClick={completeWorkout} style={{ padding: '14px 28px', background: 'var(--dark)', color: '#D4A853', border: 'none', borderRadius: 100, cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.08em' }}>MARK REST TAKEN</button>
+            <button onClick={completeWorkout} style={{ padding: '14px 28px', background: 'var(--dark)', color: '#D4A853', border: 'none', borderRadius: 100, cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.08em' }}>MARK AS DONE</button>
           ) : (
             <div style={{ color: 'var(--teal)', fontWeight: 600 }}>✓ Rest logged</div>
           )}

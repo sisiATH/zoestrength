@@ -129,7 +129,7 @@ export default function LoginPage() {
                   fontFamily: 'Bebas Neue', fontSize: 14, letterSpacing: '0.06em',
                   textDecoration: 'none',
                 }}>
-                  JOIN — $99.99/YEAR
+                  JOIN — $119/YEAR
                 </a>
                 <a href={STRIPE_LINKS.monthly} style={{
                   background: 'transparent', color: '#777770',

@@ -55,6 +55,7 @@ export default function WorkoutPlayer() {
   const [prevWeights, setPrevWeights] = useState({})
   const [activeExercise, setActiveExercise] = useState(null)
   const [howToOpen, setHowToOpen] = useState({})
+  const [extraSets, setExtraSets] = useState({})
   const [restTimer, setRestTimer] = useState(null)
   const [holdTimer, setHoldTimer] = useState(null)
   const [flash, setFlash] = useState(false)
@@ -278,14 +279,15 @@ export default function WorkoutPlayer() {
   const isRun = workout?.title?.toLowerCase().includes('run')
 
   if (loading) return <LoadingScreen />
-if (exercises.length === 0) {
+
+  if (exercises.length === 0) {
     return (
       <div style={{ maxWidth: 600, margin: '0 auto', minHeight: '100vh', background: 'var(--light)' }}>
         <div style={{ background: '#FFFFFF', padding: '16px 20px', borderBottom: '1px solid #E8E8E4', position: 'sticky', top: 56, zIndex: 40, display: 'flex', alignItems: 'center', gap: 12 }}>
           <button onClick={() => navigate(-1)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#0D0D0D', fontSize: 24, lineHeight: 1 }}>←</button>
           <h1 style={{ fontFamily: 'Bebas Neue', fontSize: 26, letterSpacing: '0.04em', color: '#0D0D0D', lineHeight: 1 }}>{workout?.title}</h1>
         </div>
-        <div style={{ padding: '88px 24px', textAlign: 'center' }}>
+        <div style={{ padding: '88px 24px 48px', textAlign: 'center' }}>
           <p style={{ fontSize: 16, color: '#555550', lineHeight: 1.6, maxWidth: 420, margin: '0 auto 28px' }}>
             {workout?.description || 'Full rest today. Recovery is where the adaptation happens.'}
           </p>
@@ -386,6 +388,7 @@ if (exercises.length === 0) {
           const hasHowTo = !!(noteText || ex.exercises?.description || ex.exercises?.video_url)
           const showHowTo = !!howToOpen[ex.id]
           const watchUrl = toWatchUrl(ex.exercises?.video_url)
+          const totalSets = ex.sets + (extraSets[ex.id] || 0)
 
           return (
             <div key={ex.id} style={{
@@ -493,7 +496,7 @@ if (exercises.length === 0) {
                       ))}
                     </div>
 
-                    {Array.from({ length: ex.sets }, (_, i) => {
+                    {Array.from({ length: totalSets }, (_, i) => {
                       const setNum = i + 1
                       const logKey = `${ex.id}-${setNum}`
                       const log = setLogs[logKey] || {}
@@ -575,6 +578,16 @@ if (exercises.length === 0) {
                         </div>
                       )
                     })}
+
+                    <button
+                      onClick={() => setExtraSets(p => ({ ...p, [ex.id]: (p[ex.id] || 0) + 1 }))}
+                      style={{
+                        width: '100%', marginTop: 4, padding: '8px', borderRadius: 8,
+                        background: 'transparent', border: '1px dashed var(--mid)',
+                        color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer',
+                        fontFamily: 'DM Sans',
+                      }}
+                    >+ Add set</button>
                   </div>
 
                   <div style={{ padding: '0 18px 16px' }}>

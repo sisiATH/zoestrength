@@ -281,6 +281,10 @@ export default function WorkoutPlayer() {
   if (loading) return <LoadingScreen />
 
   if (exercises.length === 0) {
+    const isRestDay = workout?.title === 'Rest Day'
+    const msg = isRestDay
+      ? (workout?.description || 'Full rest today. Recovery is where the adaptation happens.')
+      : 'Head out and run this one — details are in the title. Log it when you\'re back.'
     return (
       <div style={{ maxWidth: 600, margin: '0 auto', minHeight: '100vh', background: 'var(--light)' }}>
         <div style={{ background: '#FFFFFF', padding: '16px 20px', borderBottom: '1px solid #E8E8E4', position: 'sticky', top: 56, zIndex: 40, display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -289,7 +293,7 @@ export default function WorkoutPlayer() {
         </div>
         <div style={{ padding: '88px 24px 48px', textAlign: 'center' }}>
           <p style={{ fontSize: 16, color: '#555550', lineHeight: 1.6, maxWidth: 420, margin: '0 auto 28px' }}>
-            {workout?.description || 'Full rest today. Recovery is where the adaptation happens.'}
+            {msg}
           </p>
           {!completed ? (
             <button onClick={completeWorkout} style={{ padding: '14px 28px', background: 'var(--dark)', color: '#D4A853', border: 'none', borderRadius: 100, cursor: 'pointer', fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.08em' }}>MARK AS DONE</button>

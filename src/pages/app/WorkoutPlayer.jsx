@@ -26,31 +26,32 @@ function toWatchUrl(url) {
   } catch { return url }
 }
 
+function cleanNotes(notes) {
+  if (!notes) return ''
+  const parts = String(notes).split('|').map(s => s.trim()).filter(Boolean)
+  return parts.length > 1 ? parts[parts.length - 1] : String(notes).trim()
+}
+
+function repsTokenFor(ex, setNum) {
+  if (!ex?.reps) return ''
+  if (parseSeconds(ex.reps) != null) return ''
+  const arr = String(ex.reps).split('-').map(s => s.trim())
+  return arr[setNum - 1] || arr[arr.length - 1] || ''
+}
+
+function targetRepsFor(ex, setNum) {
+  const t = repsTokenFor(ex, setNum)
+  const m = String(t).match(/\d+/)
+  return m ? m[0] : ''
+}
+
 export default function WorkoutPlayer() {
   const { workoutId } = useParams()
   const { user } = useAuth()
   const navigate = useNavigate()
   const [workout, setWorkout] = useState(null)
   const [exercises, setExercises] = useState([])
-  const seededRef = useRef(false)
-  useEffect(() => {
-    if (seededRef.current || exercises.length === 0) return
-    seededRef.current = true
-    setSetLogs(prev => {
-      const next = { ...prev }
-      for (const ex of exercises) {
-        if (parseSeconds(ex.reps) != null) continue
-        const arr = String(ex.reps || '').split('-').map(s => s.trim())
-        for (let s = 1; s <= ex.sets; s++) {
-          const key = `${ex.id}-${s}`
-          if (next[key]?.reps == null) {
-            next[key] = { ...next[key], reps: arr[s - 1] || arr[arr.length - 1] || '' }
-          }
-        }
-      }
-      return next
-    })
-  }, [exercises])
+  const [setLogs, setSetLogs] = useState({})
   const [prevWeights, setPrevWeights] = useState({})
   const [activeExercise, setActiveExercise] = useState(null)
   const [howToOpen, setHowToOpen] = useState({})
@@ -102,6 +103,15 @@ export default function WorkoutPlayer() {
 
     if (exList) {
       setExercises(exList)
+      const seed = {}
+      for (const ex of exList) {
+        if (parseSeconds(ex.reps) != null) continue
+        for (let s = 1; s <= ex.sets; s++) {
+          const t = targetRepsFor(ex, s)
+          if (t) seed[`${ex.id}-${s}`] = { reps: t }
+        }
+      }
+      if (Object.keys(seed).length) setSetLogs(seed)
       for (const ex of exList) {
         const { data: prev } = await supabase
           .from('set_logs')
@@ -188,6 +198,14 @@ export default function WorkoutPlayer() {
     })
   }
 
+  function adjustHoldTimer(delta) {
+    setHoldTimer(prev => {
+      if (!prev) return null
+      const next = Math.max(1, prev.seconds + delta)
+      return { ...prev, seconds: next, max: Math.max(prev.max, next) }
+    })
+  }
+
   function startHoldTimer(seconds, onComplete, label = 'Work') {
     if (!seconds) { if (onComplete) onComplete(); return }
     if (holdTimerRef.current) clearInterval(holdTimerRef.current)
@@ -208,13 +226,6 @@ export default function WorkoutPlayer() {
     }, 1000)
   }
 
-  function targetRepsFor(ex, setNum) {
-    if (!ex?.reps) return null
-    if (parseSeconds(ex.reps) != null) return null
-    const arr = String(ex.reps).split('-').map(s => s.trim())
-    return arr[setNum - 1] || arr[arr.length - 1]
-  }
-
   function patchLog(weId, setNum, patch) {
     const key = `${weId}-${setNum}`
     setSetLogs(prev => ({ ...prev, [key]: { ...prev[key], ...patch } }))
@@ -227,7 +238,7 @@ export default function WorkoutPlayer() {
     const target = targetRepsFor(ex, setNum)
     const weight = (cur.weight === '' || cur.weight == null) ? (prevW ?? null) : cur.weight
     const reps = (cur.reps === '' || cur.reps == null) ? target : cur.reps
-    if (!cur.completed && weight == null && reps == null) return
+    if (!cur.completed && weight == null && (reps == null || reps === '')) return
     await supabase.from('set_logs').upsert({
       user_id: user.id, workout_exercise_id: weId, workout_id: workoutId,
       set_number: setNum, weight_kg: weight || null,
@@ -263,13 +274,6 @@ export default function WorkoutPlayer() {
     }, { onConflict: 'user_id,workout_id' })
     setCompleted(true)
   }
-
-  const allSetsComplete = exercises.length > 0 && exercises.every(ex => {
-    for (let s = 1; s <= ex.sets; s++) {
-      if (!setLogs[`${ex.id}-${s}`]?.completed) return false
-    }
-    return true
-  })
 
   const isRun = workout?.title?.toLowerCase().includes('run')
 
@@ -327,9 +331,9 @@ export default function WorkoutPlayer() {
                       {ex.exercises?.name}{rounds > 1 ? ` — round ${r + 1}/${rounds}` : ''}
                     </span>
                     {ex.reps && <span style={{ fontSize: 14, color: 'var(--text-muted)', marginLeft: 8 }}>{ex.reps}</span>}
-                    {r === 0 && ex.exercises?.description && (
+                    {r === 0 && cleanNotes(ex.notes) && (
                       <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4, lineHeight: 1.5 }}>
-                        {ex.exercises.description}
+                        {cleanNotes(ex.notes)}
                       </div>
                     )}
                   </div>
@@ -358,7 +362,8 @@ export default function WorkoutPlayer() {
           const isActive = activeExercise === ex.id
           const timedSeconds = ex.hold_seconds || parseSeconds(ex.reps)
           const isTimed = !!timedSeconds
-          const hasHowTo = !!(ex.exercises?.description || ex.exercises?.video_url)
+          const noteText = cleanNotes(ex.notes)
+          const hasHowTo = !!(noteText || ex.exercises?.description || ex.exercises?.video_url)
           const showHowTo = !!howToOpen[ex.id]
           const watchUrl = toWatchUrl(ex.exercises?.video_url)
 
@@ -428,8 +433,13 @@ export default function WorkoutPlayer() {
 
                       {showHowTo && (
                         <div style={{ marginTop: 8 }}>
+                          {noteText && (
+                            <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.55, margin: 0 }}>
+                              {noteText}
+                            </p>
+                          )}
                           {ex.exercises?.description && (
-                            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                            <ul style={{ listStyle: 'none', padding: 0, margin: noteText ? '8px 0 0' : 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
                               {ex.exercises.description.split(/\n|·|•/).map((line, i) => {
                                 const clean = line.trim()
                                 return clean ? (
@@ -468,6 +478,7 @@ export default function WorkoutPlayer() {
                       const logKey = `${ex.id}-${setNum}`
                       const log = setLogs[logKey] || {}
                       const prevWeight = prevWeights[ex.id]?.[setNum]
+                      const token = repsTokenFor(ex, setNum)
                       const target = targetRepsFor(ex, setNum)
                       const isDone = log.completed
                       const weightVal = log.weight ?? (prevWeight ?? '')
@@ -483,7 +494,7 @@ export default function WorkoutPlayer() {
                           <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                             {prevWeight ? `${prevWeight}kg` : '—'}
                             <span style={{ color: '#B0B0AA', marginLeft: 4 }}>
-                              {isTimed ? `×${timedSeconds}s` : `×${target ?? '—'}`}
+                              {isTimed ? `×${timedSeconds}s` : `×${token || '—'}`}
                             </span>
                           </div>
                           <input
@@ -604,17 +615,15 @@ export default function WorkoutPlayer() {
                     width: `${(t.seconds / t.max) * 100}%`, transition: 'width 1s linear',
                   }} />
                 </div>
-                {!isHold && (
-                  <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-                    {[-10, +10].map(d => (
-                      <button key={d} onClick={() => adjustRestTimer(d)} style={{
-                        flex: 1, padding: '4px 0', borderRadius: 6,
-                        background: 'rgba(255,255,255,0.15)', border: 'none',
-                        color: 'white', fontSize: 11, cursor: 'pointer', fontFamily: 'DM Sans',
-                      }}>{d > 0 ? '+' : ''}{d}s</button>
-                    ))}
-                  </div>
-                )}
+                <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                  {[-10, +10].map(d => (
+                    <button key={d} onClick={() => isHold ? adjustHoldTimer(d) : adjustRestTimer(d)} style={{
+                      flex: 1, padding: '4px 0', borderRadius: 6,
+                      background: 'rgba(255,255,255,0.15)', border: 'none',
+                      color: 'white', fontSize: 11, cursor: 'pointer', fontFamily: 'DM Sans',
+                    }}>{d > 0 ? '+' : ''}{d}s</button>
+                  ))}
+                </div>
               </div>
               <button onClick={() => {
                 if (isHold) { clearInterval(holdTimerRef.current); setHoldTimer(null) }

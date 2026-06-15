@@ -276,7 +276,7 @@ export default function WorkoutPlayer() {
     setCompleted(true)
   }
 
-  const isRun = workout?.title?.toLowerCase().includes('run')
+  const isRun = ['run', 'sit'].includes(workout?.workout_type)
 
   if (loading) return <LoadingScreen />
 

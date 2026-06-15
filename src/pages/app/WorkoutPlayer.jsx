@@ -32,7 +32,25 @@ export default function WorkoutPlayer() {
   const navigate = useNavigate()
   const [workout, setWorkout] = useState(null)
   const [exercises, setExercises] = useState([])
-  const [setLogs, setSetLogs] = useState({})
+  const seededRef = useRef(false)
+  useEffect(() => {
+    if (seededRef.current || exercises.length === 0) return
+    seededRef.current = true
+    setSetLogs(prev => {
+      const next = { ...prev }
+      for (const ex of exercises) {
+        if (parseSeconds(ex.reps) != null) continue
+        const arr = String(ex.reps || '').split('-').map(s => s.trim())
+        for (let s = 1; s <= ex.sets; s++) {
+          const key = `${ex.id}-${s}`
+          if (next[key]?.reps == null) {
+            next[key] = { ...next[key], reps: arr[s - 1] || arr[arr.length - 1] || '' }
+          }
+        }
+      }
+      return next
+    })
+  }, [exercises])
   const [prevWeights, setPrevWeights] = useState({})
   const [activeExercise, setActiveExercise] = useState(null)
   const [howToOpen, setHowToOpen] = useState({})

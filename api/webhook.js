@@ -1,7 +1,6 @@
-import Stripe from 'stripe'
-import { createClient } from '@supabase/supabase-js'
+const stripe = require('stripe')(process.env.stripesecretkey)
+const { createClient } = require('@supabase/supabase-js')
 
-const stripe = new Stripe(process.env.stripesecretkey)
 const supabase = createClient(process.env.projectURL, process.env.supabasesecretkey)
 
 export const config = { api: { bodyParser: false } }
@@ -12,7 +11,7 @@ async function buffer(readable) {
   return Buffer.concat(chunks)
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
 
   const sig = req.headers['stripe-signature']
@@ -27,8 +26,8 @@ export default async function handler(req, res) {
 
   const session = event.data.object
 
-  if (event.type === 'checkout.session.completed' || event.type === 'customer.subscription.created' || event.type === 'customer.subscription.updated') {
-    const subscription = event.type.startsWith('checkout') 
+  if (['checkout.session.completed', 'customer.subscription.created', 'customer.subscription.updated'].includes(event.type)) {
+    const subscription = event.type.startsWith('checkout')
       ? await stripe.subscriptions.retrieve(session.subscription)
       : session
 
@@ -36,18 +35,18 @@ export default async function handler(req, res) {
     const customer = await stripe.customers.retrieve(customerId)
     const email = customer.email
 
-    const { data: user } = await supabase
+    const { data: userData } = await supabase
       .from('auth.users')
       .select('id')
       .eq('email', email)
       .single()
 
-    if (!user) return res.status(200).json({ received: true, warning: 'No user found for email' })
+    if (!userData) return res.status(200).json({ received: true, warning: 'No user found' })
 
     const plan = subscription.items.data[0]?.price?.recurring?.interval === 'year' ? 'annual' : 'monthly'
 
     await supabase.from('subscriptions').upsert({
-      user_id: user.id,
+      user_id: userData.id,
       stripe_customer_id: customerId,
       stripe_subscription_id: subscription.id,
       plan,

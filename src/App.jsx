@@ -4,13 +4,14 @@ import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import PaywallPage from './pages/PaywallPage'
 import AppShell from './pages/AppShell'
+import NotSubscribedPage from './pages/NotSubscribedPage'
 import './index.css'
 
 function ProtectedRoute({ children }) {
   const { user, isSubscribed, loading } = useAuth()
   if (loading) return <LoadingScreen />
   if (!user) return <Navigate to="/login" replace />
-  if (!isSubscribed) return <PaywallPage />
+  if (!isSubscribed) return <Navigate to="/not-subscribed" replace />
   return children
 }
 
@@ -41,6 +42,7 @@ function AppRoutes() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
       <Route path="/app/*" element={<ProtectedRoute><AppShell /></ProtectedRoute>} />
+      <Route path="/not-subscribed" element={<NotSubscribedPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

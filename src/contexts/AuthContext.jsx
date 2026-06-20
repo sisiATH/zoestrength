@@ -36,7 +36,7 @@ export function AuthProvider({ children }) {
       .from('subscriptions')
       .select('*')
       .eq('user_id', userId)
-      .in('status', ['active', 'trialing'])
+      .or('status.in.(active,trialing),is_comp.eq.true')
       .order('created_at', { ascending: false })
       .limit(1)
       .single()
@@ -59,7 +59,7 @@ export function AuthProvider({ children }) {
     await supabase.auth.signOut()
   }
 
-  const isSubscribed = subscription?.status === 'active' || subscription?.status === 'trialing'
+  const isSubscribed = subscription?.status === 'active' || subscription?.status === 'trialing' || subscription?.is_comp === true
 
   return (
     <AuthContext.Provider value={{

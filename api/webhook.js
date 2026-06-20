@@ -8,7 +8,9 @@ export const config = { api: { bodyParser: false } }
 
 async function buffer(readable) {
   const chunks = []
-  for await (const chunk of readable) chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
+  }
   return Buffer.concat(chunks)
 }
 
@@ -22,7 +24,7 @@ export default async function handler(req, res) {
   try {
     event = stripe.webhooks.constructEvent(buf, sig, process.env.stripewebhook)
   } catch (err) {
-    return res.status(400).send(`Webhook Error: ${err.message}`)
+    return res.status(400).send('Webhook Error: ' + err.message)
   }
 
   const session = event.data.object
@@ -41,52 +43,7 @@ export default async function handler(req, res) {
 
     if (!userData) return res.status(200).json({ received: true, warning: 'No user found' })
 
-    const plan = subscription.items.data[0]?.price?.recurring?.interval === 'year' ?
-cat > ~/Downloads/zoestrength-new/api/webhook.js << 'EOF'
-import Stripe from 'stripe'
-import { createClient } from '@supabase/supabase-js'
-
-const stripe = new Stripe(process.env.stripesecretkey)
-const supabase = createClient(process.env.projectURL, process.env.supabasesecretkey)
-
-export const config = { api: { bodyParser: false } }
-
-async function buffer(readable) {
-  const chunks = []
-  for await (const chunk of readable) chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
-  return Buffer.concat(chunks)
-}
-
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end()
-
-  const sig = req.headers['stripe-signature']
-  const buf = await buffer(req)
-
-  let event
-  try {
-    event = stripe.webhooks.constructEvent(buf, sig, process.env.stripewebhook)
-  } catch (err) {
-    return res.status(400).send(`Webhook Error: ${err.message}`)
-  }
-
-  const session = event.data.object
-
-  if (['checkout.session.completed', 'customer.subscription.created', 'customer.subscription.updated'].includes(event.type)) {
-    const subscription = event.type.startsWith('checkout')
-      ? await stripe.subscriptions.retrieve(session.subscription)
-      : session
-
-    const customerId = subscription.customer
-    const customer = await stripe.customers.retrieve(customerId)
-    const email = customer.email
-
-    const { data: userData } = await supabase
-      .rpc('get_user_id_by_email', { email_input: email })
-
-    if (!userData) return res.status(200).json({ received: true, warning: 'No user found' })
-
-    const plan = subscription.items.data[0]?.price?.recurring?.interval === 'year' ? 'annual' : 'monthly'
+    const plan = subscription.items.data[0].price.recurring.interval === 'year' ? 'annual' : 'monthly'
 
     await supabase.from('subscriptions').upsert({
       user_id: userData,

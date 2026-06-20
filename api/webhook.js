@@ -6,17 +6,24 @@ const supabase = createClient(process.env.projectURL, process.env.supabasesecret
 
 export const config = {
   api: {
-    bodyParser: {
-      sizeLimit: '1mb',
-    },
+    bodyParser: false,
   },
+}
+
+async function getRawBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = []
+    req.on('data', (chunk) => chunks.push(chunk))
+    req.on('end', () => resolve(Buffer.concat(chunks)))
+    req.on('error', reject)
+  })
 }
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
 
   const sig = req.headers['stripe-signature']
-  const rawBody = JSON.stringify(req.body)
+  const rawBody = await getRawBody(req)
 
   let event
   try {

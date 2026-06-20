@@ -4,26 +4,22 @@ import { createClient } from '@supabase/supabase-js'
 const stripe = new Stripe(process.env.stripesecretkey)
 const supabase = createClient(process.env.projectURL, process.env.supabasesecretkey)
 
-export const config = { api: { bodyParser: false } }
-
-async function buffer(readable) {
-  const chunks = []
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
-  }
-  return Buffer.concat(chunks)
-}
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
 
   const sig = req.headers['stripe-signature']
-  const buf = await buffer(req)
+  
+  const chunks = []
+  for await (const chunk of req) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
+  }
+  const buf = Buffer.concat(chunks)
 
   let event
   try {
     event = stripe.webhooks.constructEvent(buf, sig, process.env.stripewebhook)
   } catch (err) {
+    console.error('Webhook signature error:', err.message)
     return res.status(400).send('Webhook Error: ' + err.message)
   }
 

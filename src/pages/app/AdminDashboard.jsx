@@ -1,4 +1,3 @@
-cat >> ~/Downloads/zoestrength-new/src/pages/app/AdminDashboard.jsx << 'CHUNK1'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
@@ -44,9 +43,6 @@ export default function AdminDashboard() {
     </div>
   )
 }
-CHUNK1
-echo "chunk 1 done"
-cat >> ~/Downloads/zoestrength-new/src/pages/app/AdminDashboard.jsx << 'CHUNK2'
 
 // ─── PROGRAMS TAB ────────────────────────────────────────────
 function ProgramsTab() {
@@ -165,9 +161,6 @@ function ProgramsTab() {
     </div>
   )
 }
-CHUNK2
-echo "chunk 2 done"
-cat >> ~/Downloads/zoestrength-new/src/pages/app/AdminDashboard.jsx << 'CHUNK3'
 
 // ─── BUILD WORKOUT TAB ───────────────────────────────────────
 function BuildWorkoutTab() {
@@ -226,7 +219,9 @@ function BuildWorkoutTab() {
     if (!selectedWeek || !workoutForm.title) return
     setSaving(true)
     const { data, error } = await supabase.from('workouts').insert({
-      ...workoutForm, week_id: selectedWeek, program_id: selectedProgram,
+      ...workoutForm,
+      week_id: selectedWeek,
+      program_id: selectedProgram,
       estimated_duration_mins: workoutForm.estimated_duration_mins ? parseInt(workoutForm.estimated_duration_mins) : null,
       day_number: workoutForm.day_number ? parseInt(workoutForm.day_number) : 1,
       sort_order: workouts.length,
@@ -306,6 +301,7 @@ Cues: Drive through front heel, keep torso upright`
   return (
     <div>
       <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 28, color: '#0D0D0D', marginBottom: 24 }}>BUILD WORKOUT</h2>
+
       <div style={card}>
         <h3 style={{ fontFamily: 'Bebas Neue', fontSize: 16, marginBottom: 16, color: '#888882', letterSpacing: '0.06em' }}>STEP 1 — SELECT PROGRAM & WEEK</h3>
         <div style={grid}>
@@ -325,6 +321,7 @@ Cues: Drive through front heel, keep torso upright`
           </div>
         </div>
       </div>
+
       {selectedWeek && (
         <div style={{ ...card, marginTop: 16 }}>
           <h3 style={{ fontFamily: 'Bebas Neue', fontSize: 16, marginBottom: 16, color: '#888882', letterSpacing: '0.06em' }}>STEP 2 — WORKOUT SESSION</h3>
@@ -333,7 +330,12 @@ Cues: Drive through front heel, keep torso upright`
               <p style={{ fontSize: 13, color: '#888882', marginBottom: 8 }}>Select existing:</p>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {workouts.map(w => (
-                  <button key={w.id} onClick={() => { setSelectedWorkout(w.id); setWorkoutSaved(true) }} style={{ padding: '8px 16px', borderRadius: 100, border: '1px solid #E0E0DC', background: selectedWorkout === w.id ? '#1B6B7B' : 'white', color: selectedWorkout === w.id ? 'white' : '#0D0D0D', fontSize: 13, cursor: 'pointer', fontFamily: 'DM Sans' }}>Day {w.day_number} — {w.title}</button>
+                  <button key={w.id} onClick={() => { setSelectedWorkout(w.id); setWorkoutSaved(true) }} style={{
+                    padding: '8px 16px', borderRadius: 100, border: '1px solid #E0E0DC',
+                    background: selectedWorkout === w.id ? '#1B6B7B' : 'white',
+                    color: selectedWorkout === w.id ? 'white' : '#0D0D0D',
+                    fontSize: 13, cursor: 'pointer', fontFamily: 'DM Sans',
+                  }}>Day {w.day_number} — {w.title}</button>
                 ))}
               </div>
               <p style={{ fontSize: 12, color: '#888882', margin: '12px 0 8px' }}>Or create new:</p>
@@ -358,7 +360,9 @@ Cues: Drive through front heel, keep torso upright`
             </div>
           )}
           {!workoutSaved ? (
-            <button onClick={createWorkout} disabled={saving || !workoutForm.title} style={{ ...btn('#1B6B7B'), marginTop: 16 }}>{saving ? 'Creating...' : 'Create Workout & Add Exercises →'}</button>
+            <button onClick={createWorkout} disabled={saving || !workoutForm.title} style={{ ...btn('#1B6B7B'), marginTop: 16 }}>
+              {saving ? 'Creating...' : 'Create Workout & Add Exercises →'}
+            </button>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
@@ -370,6 +374,7 @@ Cues: Drive through front heel, keep torso upright`
           )}
         </div>
       )}
+
       {selectedWorkout && workoutSaved && (
         <div style={{ ...card, marginTop: 16 }}>
           <h3 style={{ fontFamily: 'Bebas Neue', fontSize: 16, marginBottom: 16, color: '#888882', letterSpacing: '0.06em' }}>STEP 3 — ADD EXERCISES</h3>
@@ -388,7 +393,9 @@ Cues: Drive through front heel, keep torso upright`
                   <h4 style={{ fontFamily: 'Bebas Neue', fontSize: 16, marginBottom: 10 }}>PREVIEW — {parsed.length} exercises</h4>
                   {parsed.map((ex, i) => (
                     <div key={i} style={{ background: '#F8F8F6', borderRadius: 10, padding: 12, marginBottom: 8, border: '1px solid #E8E8E4' }}>
-                      <div style={{ fontWeight: 700, fontSize: 14 }}>{ex.name}{ex.section && <span style={{ fontSize: 10, background: '#E8F4F6', color: '#1B6B7B', padding: '2px 8px', borderRadius: 4, marginLeft: 8, fontWeight: 700, textTransform: 'uppercase' }}>{ex.section}</span>}</div>
+                      <div style={{ fontWeight: 700, fontSize: 14 }}>{ex.name}
+                        {ex.section && <span style={{ fontSize: 10, background: '#E8F4F6', color: '#1B6B7B', padding: '2px 8px', borderRadius: 4, marginLeft: 8, fontWeight: 700, textTransform: 'uppercase' }}>{ex.section}</span>}
+                      </div>
                       <div style={{ fontSize: 12, color: '#888882', marginTop: 3 }}>{ex.sets} sets · {ex.reps} reps · {ex.rest_seconds}s rest</div>
                       {ex.description && <div style={{ fontSize: 12, color: '#555550', marginTop: 4 }}>{ex.description}</div>}
                     </div>
@@ -437,13 +444,21 @@ Cues: Drive through front heel, keep torso upright`
               {selectedFromLibrary.length > 0 && (
                 <>
                   {msg && <p style={{ color: msg.includes('Error') ? 'red' : 'green', fontSize: 13, marginBottom: 8 }}>{msg}</p>}
-                  <button onClick={() => { const toSave = selectedFromLibrary.map(id => { const ex = exerciseLibrary.find(e => e.id === id); const f = libraryForms[id] || {}; return { name: ex.name, sets: parseInt(f.sets) || 3, reps: f.reps || '10', rest_seconds: parseInt(f.rest_seconds) || 90, section: f.section || '', description: ex.description, video_url: ex.video_url } }); saveExercises(toSave) }} disabled={saving} style={btn('#1B6B7B')}>{saving ? 'Saving...' : '✓ Add ' + selectedFromLibrary.length + ' from library'}</button>
+                  <button onClick={() => {
+                    const toSave = selectedFromLibrary.map(id => {
+                      const ex = exerciseLibrary.find(e => e.id === id)
+                      const f = libraryForms[id] || {}
+                      return { name: ex.name, sets: parseInt(f.sets) || 3, reps: f.reps || '10', rest_seconds: parseInt(f.rest_seconds) || 90, section: f.section || '', description: ex.description, video_url: ex.video_url }
+                    })
+                    saveExercises(toSave)
+                  }} disabled={saving} style={btn('#1B6B7B')}>{saving ? 'Saving...' : '✓ Add ' + selectedFromLibrary.length + ' from library'}</button>
                 </>
               )}
             </>
           )}
         </div>
       )}
+
       {existingExercises.length > 0 && (
         <div style={{ ...card, marginTop: 16 }}>
           <h3 style={{ fontFamily: 'Bebas Neue', fontSize: 16, marginBottom: 14, letterSpacing: '0.06em' }}>CURRENT EXERCISES ({existingExercises.length})</h3>
@@ -494,9 +509,6 @@ Cues: Drive through front heel, keep torso upright`
     </div>
   )
 }
-CHUNK3
-echo "chunk 3 done"
-cat >> ~/Downloads/zoestrength-new/src/pages/app/AdminDashboard.jsx << 'CHUNK4'
 
 // ─── EXERCISES TAB ───────────────────────────────────────────
 function ExercisesTab() {
@@ -580,8 +592,6 @@ function ExercisesTab() {
     </div>
   )
 }
-CHUNK4
-echo "chunk 4 done"cat >> ~/Downloads/zoestrength-new/src/pages/app/AdminDashboard.jsx << 'CHUNK5'
 
 // ─── EXTRAS TAB ──────────────────────────────────────────────
 function ExtrasTab() {
@@ -670,9 +680,6 @@ function ExtrasTab() {
     </div>
   )
 }
-CHUNK5
-echo "chunk 5 done"
-cat >> ~/Downloads/zoestrength-new/src/pages/app/AdminDashboard.jsx << 'CHUNK6'
 
 // ─── ANALYTICS TAB ───────────────────────────────────────────
 function AnalyticsTab() {
@@ -766,6 +773,7 @@ function AnalyticsTab() {
         <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 28, color: '#0D0D0D' }}>ANALYTICS</h2>
         <button onClick={fetchAll} style={btn('#1B6B7B', true)}>↻ Refresh</button>
       </div>
+
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         {[
           { label: 'Total Users', value: stats.totalUsers },
@@ -781,6 +789,7 @@ function AnalyticsTab() {
           </div>
         ))}
       </div>
+
       <div style={card}>
         <div style={{ fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.06em', marginBottom: 12 }}>SUBSCRIPTION BREAKDOWN</div>
         {subBreakdown.map(s => (
@@ -789,6 +798,7 @@ function AnalyticsTab() {
           </div>
         ))}
       </div>
+
       <div style={card}>
         <div style={{ fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.06em', marginBottom: 12 }}>TOP WORKOUTS BY COMPLETIONS</div>
         {topWorkouts.map((w, i) => (
@@ -797,6 +807,7 @@ function AnalyticsTab() {
           </div>
         ))}
       </div>
+
       <div style={card}>
         <div style={{ fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.06em', marginBottom: 12 }}>MOST LOGGED EXERCISES</div>
         {topExercises.map((e, i) => (
@@ -805,6 +816,7 @@ function AnalyticsTab() {
           </div>
         ))}
       </div>
+
       <div style={card}>
         <div style={{ fontFamily: 'Bebas Neue', fontSize: 16, letterSpacing: '0.06em', marginBottom: 12 }}>RECENT USERS</div>
         {recentUsers.map((u, i) => (
@@ -819,57 +831,6 @@ function AnalyticsTab() {
     </div>
   )
 }
-CHUNK6
-echo "chunk 6 done"cd ~/Downloads/zoestrength-new && git add -A && git commit -m "fix: restore admin with exercises + analytics tabs" && git push origin main
-
-cat >> ~/Downloads/zoestrength-new/src/pages/app/AdminDashboard.jsx << 'CHUNK7'
-
-// ─── SHARED ──────────────────────────────────────────────────
-function Field({ label, value, onChange, type = 'text', span, multiline, placeholder }) {
-  return (
-    <div style={{ gridColumn: span ? 'span ' + span : undefined }}>
-      <label style={lbl}>{label}</label>
-      {multiline
-        ? <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={{ ...inp, height: 80, resize: 'vertical' }} />
-        : <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={inp} />}
-    </div>
-  )
-}
-
-const lbl = { display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#888882', marginBottom: 6 }
-const inp = { width: '100%', padding: '10px 14px', border: '1px solid #E0E0DC', borderRadius: 10, fontSize: 14, fontFamily: 'DM Sans', outline: 'none', boxSizing: 'border-box', background: '#FFFFFF' }
-const card = { background: '#FFFFFF', borderRadius: 16, padding: 24, border: '1px solid #E8E8E4', marginBottom: 16 }
-const grid = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }
-const btn = (color, small) => ({ background: color, color: 'white', border: 'none', cursor: 'pointer', padding: small ? '8px 16px' : '12px 24px', borderRadius: 100, fontFamily: 'Bebas Neue', fontSize: small ? 13 : 15, letterSpacing: '0.06em' })
-CHUNK7
-echo "done - now deploy"cd ~/Downloads/zoestrength-new && git add -A && git commit -m "fix: restore admin with exercises + analytics tabs" && git push origin main
-cat >> ~/Downloads/zoestrength-new/src/pages/app/AdminDashboard.jsx << 'CHUNK7'
-
-// ─── SHARED ──────────────────────────────────────────────────
-function Field({ label, value, onChange, type = 'text', span, multiline, placeholder }) {
-  return (
-    <div style={{ gridColumn: span ? 'span ' + span : undefined }}>
-      <label style={lbl}>{label}</label>
-      {multiline
-        ? <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={{ ...inp, height: 80, resize: 'vertical' }} />
-        : <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} style={inp} />}
-    </div>
-  )
-}
-
-const lbl = { display: 'block', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#888882', marginBottom: 6 }
-const inp = { width: '100%', padding: '10px 14px', border: '1px solid #E0E0DC', borderRadius: 10, fontSize: 14, fontFamily: 'DM Sans', outline: 'none', boxSizing: 'border-box', background: '#FFFFFF' }
-const card = { background: '#FFFFFF', borderRadius: 16, padding: 24, border: '1px solid #E8E8E4', marginBottom: 16 }
-const grid = { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }
-const btn = (color, small) => ({ background: color, color: 'white', border: 'none', cursor: 'pointer', padding: small ? '8px 16px' : '12px 24px', borderRadius: 100, fontFamily: 'Bebas Neue', fontSize: small ? 13 : 15, letterSpacing: '0.06em' })
-CHUNK7
-echo "chunk 7 done"
-
-cd ~/Downloads/zoestrength-new && git add -A && git commit -m "fix: restore admin with exercises + analytics tabs" && git push origin main
-echo "chunk 7 done"
-CHUNK7
-
-'CHUNK7'
 
 // ─── SHARED ──────────────────────────────────────────────────
 function Field({ label, value, onChange, type = 'text', span, multiline, placeholder }) {

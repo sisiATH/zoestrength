@@ -20,7 +20,7 @@ export default function PaywallPage() {
           fontFamily: 'Bebas Neue', fontSize: 52, letterSpacing: '0.03em',
           color: 'var(--white)', marginTop: 16, marginBottom: 8, lineHeight: 0.95,
         }}>
-          ZOE<span style={{ color: '#C4857A' }}>STRENGTH</span>
+          fit with <span style={{ color: '#C4857A' }}>sisi</span>
         </h1>
 
         <p style={{ color: '#777770', fontSize: 14, marginBottom: 48 }}>

@@ -39,7 +39,7 @@ export default function LoginPage() {
             fontFamily: 'Bebas Neue', fontSize: 28, letterSpacing: '0.08em',
             color: 'var(--white)', marginTop: 12,
           }}>
-            ZOE<span style={{ color: '#C4857A' }}>STRENGTH</span>
+            fit with <span style={{ color: '#C4857A' }}>sisi</span>
           </div>
         </div>
 

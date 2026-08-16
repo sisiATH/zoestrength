@@ -12,7 +12,7 @@ export default function NotSubscribedPage() {
     }}>
       <h1 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Having trouble accessing your account?</h1>
       <p style={{ color: '#666', marginBottom: '2rem' }}>Don't worry — reach out and we'll get you sorted.</p>
-      <a href="mailto:hello@zoestrength.com" style={{
+      <a href="mailto:fitwithsisi@gmail.com" style={{
         background: '#C8F500',
         color: '#000',
         padding: '0.75rem 2rem',

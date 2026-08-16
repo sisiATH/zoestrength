@@ -102,14 +102,14 @@ export default function LandingPage() {
               width: 200, height: 200, borderRadius: '50%',
               border: '3px solid ' + GOLD,
               overflow: 'hidden',
-              backgroundImage: 'url(https://zoestrength.vercel.app/sabrina.jpg)',
+              backgroundImage: 'url(https://fitwithsisi.vercel.app/sabrina.jpg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center top',
             }} />
           </div>
           <div style={{ flex: 1, minWidth: 280 }}>
             <p style={{ color: ROSE, fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 12 }}>Your coach</p>
-            <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 48, color: DARK, marginBottom: 6, letterSpacing: '0.02em' }}>SABRINA KYRIACOU</h2>
+            <h2 style={{ fontFamily: 'Bebas Neue', fontSize: 48, color: DARK, marginBottom: 6, letterSpacing: '0.02em' }}>SISI KYRIACOU</h2>
             <p style={{ fontSize: 12, color: MUTED, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 20 }}>B.Sc Exercise Science · 9× HM · 1× Marathon · 12× 10K · 7× 5K</p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: '#555550', maxWidth: 580, marginBottom: 16 }}>
               I started running in my early 30s and quickly fell in love with it. Over the years I've run everything from 5Ks to a full marathon — sometimes chasing faster times, other times just trying to make it to the finish. Structure helped me stay consistent, but I also learned how easy it is to push too hard.
@@ -122,29 +122,6 @@ export default function LandingPage() {
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: '#555550', maxWidth: 580 }}>
               I'm not a professional runner or influencer — just a real woman with a real body that needs real work. If you're trying to find that same balance between performance, strength, and everyday life — this is for you.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ZOE MEANING */}
-      <section style={{ background: WHITE, padding: '100px 48px' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ fontFamily: 'Bebas Neue', fontSize: 80, color: GOLD, letterSpacing: '0.1em', marginBottom: 8 }}>ΖΩΗ</div>
-          <div style={{ fontSize: 13, color: MUTED, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 48 }}>pronounced ZO-ee · Greek for life</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, textAlign: 'left' }}>
-            <div style={{ borderLeft: '2px solid ' + TEAL, paddingLeft: 24 }}>
-              <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: TEAL, marginBottom: 10 }}>Early Christian tradition</p>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: '#555550' }}>ZΩΗ was a personification of eternal life. Life that doesn't diminish. Life that continues and deepens.</p>
-            </div>
-            <div style={{ borderLeft: '2px solid ' + ROSE, paddingLeft: 24 }}>
-              <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: ROSE, marginBottom: 10 }}>Gnostic tradition</p>
-              <p style={{ fontSize: 15, lineHeight: 1.8, color: '#555550' }}>ZΩΗ is a powerful female figure, daughter of Sophia (wisdom), who corrects what was done wrong. She sees the error, the dismissal, the assumption — and she fixes it. Sound familiar, ladies?</p>
-            </div>
-          </div>
-          <div style={{ marginTop: 48, padding: '32px 40px', border: '1px solid #E8E8E4', borderRadius: 16 }}>
-            <p style={{ fontSize: 17, lineHeight: 1.9, color: '#555550', fontStyle: 'italic' }}>
-              "This is about being fully alive in your body. Earned. Unselfconscious. Can't be faked. Fully inhabiting the body you have, at the stage you're at, with everything you now know. The training, the science, the nutrition — all of it is in service of that feeling. That's what we're building here."
             </p>
           </div>
         </div>
@@ -205,7 +182,7 @@ export default function LandingPage() {
             READY TO FEEL<br /><span style={{ color: ROSE }}>FULLY ALIVE?</span>
           </h2>
           <p style={{ fontSize: 16, color: MUTED, marginBottom: 48, lineHeight: 1.6 }}>
-            Join ZOESTRENGTH and get access to every program, every video, every PDF.
+            Join fit with sisi and get access to every program, every video, every PDF.
           </p>
           <PricingBlock billingCycle={billingCycle} setBillingCycle={setBillingCycle} discountCode={discountCode} setDiscountCode={setDiscountCode} stripeLink={getStripeLink()} centered />
         </div>
@@ -214,7 +191,7 @@ export default function LandingPage() {
       {/* FOOTER */}
       <footer style={{ borderTop: '1px solid #E8E8E4', padding: '32px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, maxWidth: 1200, margin: '0 auto' }}>
         <Wordmark />
-        <p style={{ fontSize: 12, color: MUTED }}>© 2026 Sabrina Kyriacou · ZOESTRENGTH</p>
+        <p style={{ fontSize: 12, color: MUTED }}>© 2026 Sisi Kyriacou · fit with sisi</p>
         <div style={{ display: 'flex', gap: 24 }}>
           <a href="#" style={{ fontSize: 12, color: MUTED, textDecoration: 'none' }}>Privacy</a>
           <a href="#" style={{ fontSize: 12, color: MUTED, textDecoration: 'none' }}>Terms</a>
@@ -266,7 +243,7 @@ function HeroVisual() {
       </div>
       <div style={{ position: 'absolute', bottom: 60, left: 0, right: 0, textAlign: 'center' }}>
         <div style={{ fontFamily: 'Bebas Neue', fontSize: 42, letterSpacing: '0.06em', color: DARK, lineHeight: 1 }}>
-          ZOE<span style={{ color: ROSE }}>STRENGTH</span>
+          fit with <span style={{ color: ROSE }}>sisi</span>
         </div>
         <div style={{ fontSize: 12, color: MUTED, letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 6 }}>Fully alive in your body</div>
       </div>
@@ -281,7 +258,7 @@ function Wordmark() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
       <BoltIcon size={22} color={GOLD} />
-      <span style={{ fontFamily: 'Bebas Neue', fontSize: 20, letterSpacing: '0.08em', color: DARK }}>ZOE<span style={{ color: ROSE }}>STRENGTH</span></span>
+      <span style={{ fontFamily: 'Bebas Neue', fontSize: 20, letterSpacing: '0.08em', color: DARK }}>fit with <span style={{ color: ROSE }}>sisi</span></span>
     </div>
   )
 }

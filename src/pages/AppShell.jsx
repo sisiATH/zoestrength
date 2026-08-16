@@ -39,7 +39,7 @@ export default function AppShell() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <BoltIcon size={20} color={WHITE} />
           <span style={{ fontFamily: 'Bebas Neue', fontSize: 20, letterSpacing: '0.08em', color: WHITE }}>
-            ZOESTRENGTH
+            fit with sisi
           </span>
         </div>
 
